@@ -30,7 +30,6 @@ export default function AdminPage() {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [migrating, setMigrating] = useState(false);
   const [newProduct, setNewProduct] = useState({ name: '', price: '', description: '', category: 'Black Tea', stock: '', image_url: '' });
   const [imageFile, setImageFile] = useState<File | null>(null);
 
@@ -45,20 +44,6 @@ export default function AdminPage() {
 
   const handleLogout = async () => {
     await signOut();
-  };
-
-  const handleMigrate = async () => {
-    if (!confirm('This will upload all current local mock products to your Supabase database. Continue?')) return;
-    setMigrating(true);
-    const result = await seedProducts();
-    setMigrating(false);
-    if (result.success) {
-      showToast(`Successfully migrated ${result.count} products!`, 'success');
-      fetchProducts();
-    } else {
-      const msg = (result.error as any)?.message || 'Check connection and SQL setup.';
-      showToast(`Migration failed: ${msg}`, 'error');
-    }
   };
 
   const uploadImage = async (file: File) => {
