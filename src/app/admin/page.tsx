@@ -8,6 +8,7 @@ import { seedProducts } from '@/lib/seed';
 import Logo from '@/components/Logo/Logo';
 import styles from './page.module.css';
 import { useToast } from '@/context/ToastContext';
+import { useAuth } from '@/context/AuthContext';
 
 type Tab = 'products' | 'orders';
 
@@ -28,11 +29,7 @@ const STATUS_COLORS: Record<string, string> = {
 
 export default function AdminPage() {
   const { showToast } = useToast();
-  const [authed, setAuthed] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [loginEmail, setLoginEmail] = useState('');
-  const [loginPass, setLoginPass] = useState('');
-  const [loginError, setLoginError] = useState('');
+  const { signOut } = useAuth();
   const [tab, setTab] = useState<Tab>('products');
   const [products, setProducts] = useState<Product[]>([]);
   const [orders, setOrders] = useState(MOCK_ORDERS);
@@ -44,38 +41,16 @@ export default function AdminPage() {
   const [imageFile, setImageFile] = useState<File | null>(null);
 
   React.useEffect(() => {
-    checkUser();
     fetchProducts();
   }, []);
-
-  const checkUser = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session) setAuthed(true);
-    setLoading(false);
-  };
 
   const fetchProducts = async () => {
     const { data, error } = await supabase.from('products').select('*').order('created_at', { ascending: false });
     if (data) setProducts(data);
   };
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoginError('');
-    const { error } = await supabase.auth.signInWithPassword({
-      email: loginEmail,
-      password: loginPass,
-    });
-    if (error) {
-      setLoginError(error.message);
-    } else {
-      setAuthed(true);
-    }
-  };
-
   const handleLogout = async () => {
-    await supabase.auth.signOut();
-    setAuthed(false);
+    await signOut();
   };
 
   const handleMigrate = async () => {
@@ -204,35 +179,6 @@ export default function AdminPage() {
       setUploading(false);
     }
   };
-
-  if (!authed) {
-    return (
-      <div className={styles.loginPage}>
-        <div className={styles.loginCard}>
-          <div className={styles.loginHeader}>
-            <Logo height={64} className={styles.loginLogo} />
-            <h1 className={styles.loginTitle}>MUKHERJEE TEA COMPANY</h1>
-            <p className={styles.loginSub}>Admin Control Panel — Protected Area</p>
-          </div>
-          <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            <div className="form-group">
-              <label className="form-label">Admin Email</label>
-              <input type="email" value={loginEmail} onChange={e => setLoginEmail(e.target.value)} placeholder="admin@mukherjeetea.com" className="form-input" id="admin-email" />
-            </div>
-            <div className="form-group">
-              <label className="form-label">Password</label>
-              <input type="password" value={loginPass} onChange={e => setLoginPass(e.target.value)} placeholder="••••••••••" className="form-input" id="admin-password" />
-            </div>
-            {loginError && <p style={{ color: '#f87171', fontSize: '0.85rem' }}>{loginError}</p>}
-            <button type="submit" className="btn btn-primary btn-lg" style={{ width: '100%', justifyContent: 'center', marginTop: 8 }} id="admin-login-btn">
-              Login to Dashboard
-            </button>
-          </form>
-          <p style={{ textAlign: 'center', fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: 12 }}>Demo: admin@mukherjeetea.com / mukherjee2024</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className={styles.adminPage}>

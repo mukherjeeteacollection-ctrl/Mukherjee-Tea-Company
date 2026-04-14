@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
 import { ToastProvider } from "@/context/ToastContext";
+import { AuthProvider } from "@/context/AuthContext";
 import Navbar from "@/components/Navbar/Navbar";
 import Footer from "@/components/Footer/Footer";
 import CartDrawer from "@/components/CartDrawer/CartDrawer";
@@ -35,14 +36,16 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <ToastProvider>
-          <CartProvider>
-            <Navbar />
-            <CartDrawer />
-            <main style={{ paddingTop: 'var(--nav-height)' }}>
-              {children}
-            </main>
-            <Footer />
-          </CartProvider>
+          <AuthProvider>
+            <CartProvider>
+              <Navbar />
+              <CartDrawer />
+              <main style={{ paddingTop: 'var(--nav-height)' }}>
+                {children}
+              </main>
+              <Footer />
+            </CartProvider>
+          </AuthProvider>
         </ToastProvider>
       </body>
     </html>

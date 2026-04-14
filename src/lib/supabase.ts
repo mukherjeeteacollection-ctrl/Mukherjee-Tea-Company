@@ -61,6 +61,15 @@ export type Database = {
           phone: string | null;
           created_at: string;
         };
+        Insert: {
+          id: string;
+          email: string;
+          name?: string | null;
+          role?: 'customer' | 'admin';
+          phone?: string | null;
+          created_at?: string;
+        };
+        Update: Partial<Database['public']['Tables']['profiles']['Insert']>;
       };
     };
   };
