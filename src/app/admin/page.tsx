@@ -91,7 +91,7 @@ export default function AdminPage() {
     if (confirm('Delete this product?')) {
       const { error } = await supabase.from('products').delete().eq('id', id);
       if (error) {
-        showToast('Error deleting product', 'error');
+        showToast(error.message || 'Error deleting product', 'error');
       } else {
         showToast('Product deleted successfully', 'success');
         fetchProducts();
@@ -105,7 +105,7 @@ export default function AdminPage() {
       .eq('id', orderId);
 
     if (error) {
-      showToast('Error updating status', 'error');
+      showToast(error.message || 'Error updating status', 'error');
     } else {
       setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: status as any } : o));
       showToast('Order status updated', 'success');
