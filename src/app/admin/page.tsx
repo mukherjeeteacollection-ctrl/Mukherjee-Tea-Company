@@ -30,7 +30,12 @@ export default function AdminPage() {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [newProduct, setNewProduct] = useState({ name: '', price: '', description: '', category: 'Black Tea', stock: '', image_url: '' });
+  const [newProduct, setNewProduct] = useState({
+    name: '', price: '', description: '', category: 'Black Tea', stock: '', image_url: '',
+    origin: '', long_description: '', experience: '', tea_type: '', flavor_profile: '', aroma: '',
+    caffeine_level: '', benefits: '', steep_temp: '', steep_amount: '', steep_time: '', steep_resteep: '', why_choose: '',
+    weight_options: '100g, 250g', is_featured: false,
+  });
   const [imageFile, setImageFile] = useState<File | null>(null);
 
   React.useEffect(() => {
@@ -124,24 +129,35 @@ export default function AdminPage() {
     if (!newProduct.name || !newProduct.price) return;
     setUploading(true);
     try {
-      let finalImageUrl = '/assam-breakfast.png'; // Fallback
+      let finalImageUrl = '/assam-breakfast.png';
       if (imageFile) {
         finalImageUrl = await uploadImage(imageFile);
       }
 
       const p = {
         name: newProduct.name,
-        slug: newProduct.name.toLowerCase().replace(/\s+/g, '-'),
+        slug: newProduct.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
         description: newProduct.description,
-        long_description: null,
+        long_description: newProduct.long_description || null,
         price: Number(newProduct.price),
         stock: Number(newProduct.stock) || 0,
         image_url: finalImageUrl,
         category: newProduct.category,
-        origin: 'India',
-        weight_options: ['100g', '250g'],
-        is_featured: false,
+        origin: newProduct.origin || 'India',
+        weight_options: newProduct.weight_options.split(',').map((s: string) => s.trim()).filter(Boolean),
+        is_featured: newProduct.is_featured,
         is_active: true,
+        experience: newProduct.experience || null,
+        tea_type: newProduct.tea_type || null,
+        flavor_profile: newProduct.flavor_profile || null,
+        aroma: newProduct.aroma || null,
+        caffeine_level: newProduct.caffeine_level || null,
+        benefits: newProduct.benefits || null,
+        steep_temp: newProduct.steep_temp || null,
+        steep_amount: newProduct.steep_amount || null,
+        steep_time: newProduct.steep_time || null,
+        steep_resteep: newProduct.steep_resteep || null,
+        why_choose: newProduct.why_choose || null,
       };
 
       const { error } = await (supabase.from('products') as any).insert([p]);
@@ -150,7 +166,12 @@ export default function AdminPage() {
       showToast('Product added successfully', 'success');
       setShowAddForm(false);
       setImageFile(null);
-      setNewProduct({ name: '', price: '', description: '', category: 'Black Tea', stock: '', image_url: '' });
+      setNewProduct({
+        name: '', price: '', description: '', category: 'Black Tea', stock: '', image_url: '',
+        origin: '', long_description: '', experience: '', tea_type: '', flavor_profile: '', aroma: '',
+        caffeine_level: '', benefits: '', steep_temp: '', steep_amount: '', steep_time: '', steep_resteep: '', why_choose: '',
+        weight_options: '100g, 250g', is_featured: false,
+      });
       fetchProducts();
     } catch (err: any) {
       showToast(err.message || 'Error adding product', 'error');
@@ -201,15 +222,16 @@ export default function AdminPage() {
 
             {showAddForm && (
               <div className={styles.addForm}>
-                <h3 style={{ fontFamily: 'Outfit', fontWeight: 700, color: 'var(--text-primary)', marginBottom: 16, fontSize: '1rem' }}>New Product</h3>
+                {/* ── Section 1: General Info ── */}
+                <h3 style={{ fontFamily: 'Outfit', fontWeight: 700, color: 'var(--text-primary)', marginBottom: 16, fontSize: '1.1rem', borderBottom: '1px solid var(--border-subtle, #333)', paddingBottom: 10 }}>📦 General Info</h3>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
                   <div className="form-group">
                     <label className="form-label">Name *</label>
-                    <input value={newProduct.name} onChange={e => setNewProduct(p => ({ ...p, name: e.target.value }))} placeholder="Product name" className="form-input" />
+                    <input value={newProduct.name} onChange={e => setNewProduct(p => ({ ...p, name: e.target.value }))} placeholder="e.g. Darjeeling Gold First Flush" className="form-input" />
                   </div>
                   <div className="form-group">
                     <label className="form-label">Price (₹) *</label>
-                    <input type="number" value={newProduct.price} onChange={e => setNewProduct(p => ({ ...p, price: e.target.value }))} placeholder="999" className="form-input" />
+                    <input type="number" value={newProduct.price} onChange={e => setNewProduct(p => ({ ...p, price: e.target.value }))} placeholder="899" className="form-input" />
                   </div>
                   <div className="form-group">
                     <label className="form-label">Category</label>
@@ -221,18 +243,103 @@ export default function AdminPage() {
                     <label className="form-label">Stock</label>
                     <input type="number" value={newProduct.stock} onChange={e => setNewProduct(p => ({ ...p, stock: e.target.value }))} placeholder="50" className="form-input" />
                   </div>
+                  <div className="form-group">
+                    <label className="form-label">Origin</label>
+                    <input value={newProduct.origin} onChange={e => setNewProduct(p => ({ ...p, origin: e.target.value }))} placeholder="e.g. Darjeeling, West Bengal" className="form-input" />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Weight Options (comma separated)</label>
+                    <input value={newProduct.weight_options} onChange={e => setNewProduct(p => ({ ...p, weight_options: e.target.value }))} placeholder="50g, 100g, 250g" className="form-input" />
+                  </div>
                   <div className="form-group" style={{ gridColumn: '1 / -1' }}>
                     <label className="form-label">Product Image</label>
                     <input type="file" accept="image/*" onChange={e => setImageFile(e.target.files?.[0] || null)} className="form-input" style={{ paddingTop: 8 }} />
                   </div>
                   <div className="form-group" style={{ gridColumn: '1 / -1' }}>
-                    <label className="form-label">Description</label>
-                    <input value={newProduct.description} onChange={e => setNewProduct(p => ({ ...p, description: e.target.value }))} placeholder="Short description..." className="form-input" />
+                    <label className="form-label">Short Description *</label>
+                    <input value={newProduct.description} onChange={e => setNewProduct(p => ({ ...p, description: e.target.value }))} placeholder="One-line tagline for the product card" className="form-input" />
+                  </div>
+                  <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                    <label className="form-label">Long Description</label>
+                    <textarea value={newProduct.long_description} onChange={e => setNewProduct(p => ({ ...p, long_description: e.target.value }))} placeholder="Detailed paragraph about this tea..." className="form-input" rows={3} style={{ resize: 'vertical' }} />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <input type="checkbox" checked={newProduct.is_featured} onChange={e => setNewProduct(p => ({ ...p, is_featured: e.target.checked }))} />
+                      Featured Product (shown on homepage)
+                    </label>
                   </div>
                 </div>
-                <div style={{ display: 'flex', gap: 12, marginTop: 16 }}>
+
+                {/* ── Section 2: The Experience ── */}
+                <h3 style={{ fontFamily: 'Outfit', fontWeight: 700, color: 'var(--text-primary)', marginTop: 28, marginBottom: 16, fontSize: '1.1rem', borderBottom: '1px solid var(--border-subtle, #333)', paddingBottom: 10 }}>✨ The Experience</h3>
+                <div className="form-group">
+                  <label className="form-label">Experience Description</label>
+                  <textarea value={newProduct.experience} onChange={e => setNewProduct(p => ({ ...p, experience: e.target.value }))} placeholder="Describe the sensory experience of this tea. What does it feel like to drink it? Paint a picture for the customer..." className="form-input" rows={4} style={{ resize: 'vertical' }} />
+                </div>
+
+                {/* ── Section 3: Product Details ── */}
+                <h3 style={{ fontFamily: 'Outfit', fontWeight: 700, color: 'var(--text-primary)', marginTop: 28, marginBottom: 16, fontSize: '1.1rem', borderBottom: '1px solid var(--border-subtle, #333)', paddingBottom: 10 }}>🍃 Product Details</h3>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+                  <div className="form-group">
+                    <label className="form-label">Type</label>
+                    <input value={newProduct.tea_type} onChange={e => setNewProduct(p => ({ ...p, tea_type: e.target.value }))} placeholder="e.g. Whole Leaf, CTC, Rolled Pearl" className="form-input" />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Flavor Profile</label>
+                    <input value={newProduct.flavor_profile} onChange={e => setNewProduct(p => ({ ...p, flavor_profile: e.target.value }))} placeholder="e.g. Muscatel, Floral, Honey" className="form-input" />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Aroma</label>
+                    <input value={newProduct.aroma} onChange={e => setNewProduct(p => ({ ...p, aroma: e.target.value }))} placeholder="e.g. Delicate floral with a hint of musk" className="form-input" />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Caffeine Level</label>
+                    <select value={newProduct.caffeine_level} onChange={e => setNewProduct(p => ({ ...p, caffeine_level: e.target.value }))} className="form-select">
+                      <option value="">Select...</option>
+                      <option value="None">None (Caffeine-Free)</option>
+                      <option value="Low">Low</option>
+                      <option value="Medium">Medium</option>
+                      <option value="High">High</option>
+                    </select>
+                  </div>
+                  <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                    <label className="form-label">Benefits</label>
+                    <input value={newProduct.benefits} onChange={e => setNewProduct(p => ({ ...p, benefits: e.target.value }))} placeholder="e.g. Rich in antioxidants, Boosts immunity, Aids digestion" className="form-input" />
+                  </div>
+                </div>
+
+                {/* ── Section 4: The Perfect Steep ── */}
+                <h3 style={{ fontFamily: 'Outfit', fontWeight: 700, color: 'var(--text-primary)', marginTop: 28, marginBottom: 16, fontSize: '1.1rem', borderBottom: '1px solid var(--border-subtle, #333)', paddingBottom: 10 }}>☕ The Perfect Steep</h3>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+                  <div className="form-group">
+                    <label className="form-label">Water Temperature</label>
+                    <input value={newProduct.steep_temp} onChange={e => setNewProduct(p => ({ ...p, steep_temp: e.target.value }))} placeholder="e.g. 85–90°C" className="form-input" />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Amount</label>
+                    <input value={newProduct.steep_amount} onChange={e => setNewProduct(p => ({ ...p, steep_amount: e.target.value }))} placeholder="e.g. 2g per 200ml" className="form-input" />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Steep Time</label>
+                    <input value={newProduct.steep_time} onChange={e => setNewProduct(p => ({ ...p, steep_time: e.target.value }))} placeholder="e.g. 3–5 minutes" className="form-input" />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Re-steeping</label>
+                    <input value={newProduct.steep_resteep} onChange={e => setNewProduct(p => ({ ...p, steep_resteep: e.target.value }))} placeholder="e.g. Can be re-steeped 2-3 times" className="form-input" />
+                  </div>
+                </div>
+
+                {/* ── Section 5: Why Choose ── */}
+                <h3 style={{ fontFamily: 'Outfit', fontWeight: 700, color: 'var(--text-primary)', marginTop: 28, marginBottom: 16, fontSize: '1.1rem', borderBottom: '1px solid var(--border-subtle, #333)', paddingBottom: 10 }}>💎 Why Choose This Tea</h3>
+                <div className="form-group">
+                  <label className="form-label">Why Choose</label>
+                  <textarea value={newProduct.why_choose} onChange={e => setNewProduct(p => ({ ...p, why_choose: e.target.value }))} placeholder="What makes this tea unique? Why should a customer choose this over others?" className="form-input" rows={3} style={{ resize: 'vertical' }} />
+                </div>
+
+                <div style={{ display: 'flex', gap: 12, marginTop: 24 }}>
                   <button onClick={handleAddProduct} disabled={uploading} className="btn btn-primary">
-                    {uploading ? 'Processing...' : 'Save Product'}
+                    {uploading ? 'Processing...' : '✨ Save Product'}
                   </button>
                   <button onClick={() => setShowAddForm(false)} className="btn btn-secondary">Cancel</button>
                 </div>

@@ -27,7 +27,6 @@ function ProductDetail({ slug }: { slug: string }) {
   const [selectedWeight, setSelectedWeight] = useState('100g');
   const [quantity, setQuantity] = useState(1);
   const [adding, setAdding] = useState(false);
-  const [activeTab, setActiveTab] = useState<'description' | 'brewing' | 'origin'>('description');
 
   useEffect(() => {
     async function fetchProduct() {
@@ -233,69 +232,125 @@ function ProductDetail({ slug }: { slug: string }) {
         </div>
       </section>
 
-      {/* Tabs */}
-      <section className={styles.tabsSection}>
-        <div className="container">
-          <div className={styles.tabs}>
-            {(['description', 'brewing', 'origin'] as const).map(tab => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`${styles.tab} ${activeTab === tab ? styles.tabActive : ''}`}
-                id={`product-tab-${tab}`}
-              >
-                {tab === 'description' ? '📖 Description' : tab === 'brewing' ? '☕ Brewing Guide' : '🗺️ Origin'}
-              </button>
-            ))}
+      {/* ══════════════════════════════════════════════
+          THE EXPERIENCE
+          ══════════════════════════════════════════════ */}
+      {(product.experience || product.long_description) && (
+        <section className={styles.tabsSection}>
+          <div className="container">
+            <div style={{ maxWidth: 800, margin: '0 auto' }}>
+              <p style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 3, color: 'var(--gold-primary)', marginBottom: 8 }}>The Experience</p>
+              <h2 style={{ fontFamily: 'Outfit', fontSize: '1.6rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 20 }}>
+                A Journey in Every Cup
+              </h2>
+              <p style={{ fontSize: '1.05rem', lineHeight: 1.8, color: 'var(--text-secondary)' }}>
+                {product.experience || product.long_description || product.description}
+              </p>
+            </div>
           </div>
+        </section>
+      )}
 
-          <div className={styles.tabContent}>
-            {activeTab === 'description' && (
-              <div className={styles.descriptionContent}>
-                <p>{product.long_description || product.description}</p>
-              </div>
-            )}
-
-            {activeTab === 'brewing' && (
-              <div className={styles.brewingContent}>
-                <div className={styles.brewingGrid}>
-                  {[
-                    { icon: '🌡️', label: 'Water Temperature', value: brewing.temp },
-                    { icon: '⏱️', label: 'Steep Time',         value: brewing.time },
-                    { icon: '⚖️', label: 'Tea to Water Ratio', value: brewing.ratio },
-                  ].map(b => (
-                    <div key={b.label} className={styles.brewingCard}>
-                      <span className={styles.brewingIcon}>{b.icon}</span>
-                      <span className={styles.brewingLabel}>{b.label}</span>
-                      <span className={styles.brewingValue}>{b.value}</span>
-                    </div>
-                  ))}
-                </div>
-                <div className={styles.brewingTip}>
-                  <span>💡</span>
-                  <p><strong>Pro Tip:</strong> {brewing.tips}</p>
-                </div>
-              </div>
-            )}
-
-            {activeTab === 'origin' && (
-              <div className={styles.originContent}>
-                <div className={styles.originCard}>
-                  <span style={{ fontSize: '3rem' }}>🏔️</span>
-                  <div>
-                    <h3>{product.origin}</h3>
-                    <p>
-                      This tea is sourced directly from carefully selected estates in {product.origin},
-                      known for their exceptional terroir and traditional cultivation methods.
-                      The unique combination of altitude, climate, and soil composition gives this tea its distinct character.
-                    </p>
+      {/* ══════════════════════════════════════════════
+          PRODUCT DETAILS
+          ══════════════════════════════════════════════ */}
+      {(product.tea_type || product.flavor_profile || product.aroma || product.caffeine_level || product.benefits) && (
+        <section style={{ padding: '60px 0', background: 'var(--surface-secondary, rgba(255,255,255,0.02))' }}>
+          <div className="container">
+            <div style={{ maxWidth: 900, margin: '0 auto' }}>
+              <p style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 3, color: 'var(--gold-primary)', marginBottom: 8, textAlign: 'center' }}>Product Details</p>
+              <h2 style={{ fontFamily: 'Outfit', fontSize: '1.6rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 36, textAlign: 'center' }}>
+                Know Your Tea
+              </h2>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 20 }}>
+                {product.tea_type && (
+                  <div style={{ background: 'var(--dark-card, rgba(255,255,255,0.04))', borderRadius: 16, padding: '24px 20px', textAlign: 'center', border: '1px solid var(--border-subtle, rgba(255,255,255,0.06))' }}>
+                    <span style={{ fontSize: '2rem', display: 'block', marginBottom: 8 }}>🍃</span>
+                    <span style={{ fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 2, color: 'var(--text-muted)' }}>Type</span>
+                    <p style={{ fontFamily: 'Outfit', fontWeight: 700, fontSize: '1rem', color: 'var(--text-primary)', marginTop: 4 }}>{product.tea_type}</p>
                   </div>
-                </div>
+                )}
+                {product.flavor_profile && (
+                  <div style={{ background: 'var(--dark-card, rgba(255,255,255,0.04))', borderRadius: 16, padding: '24px 20px', textAlign: 'center', border: '1px solid var(--border-subtle, rgba(255,255,255,0.06))' }}>
+                    <span style={{ fontSize: '2rem', display: 'block', marginBottom: 8 }}>👅</span>
+                    <span style={{ fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 2, color: 'var(--text-muted)' }}>Flavor Profile</span>
+                    <p style={{ fontFamily: 'Outfit', fontWeight: 700, fontSize: '1rem', color: 'var(--text-primary)', marginTop: 4 }}>{product.flavor_profile}</p>
+                  </div>
+                )}
+                {product.aroma && (
+                  <div style={{ background: 'var(--dark-card, rgba(255,255,255,0.04))', borderRadius: 16, padding: '24px 20px', textAlign: 'center', border: '1px solid var(--border-subtle, rgba(255,255,255,0.06))' }}>
+                    <span style={{ fontSize: '2rem', display: 'block', marginBottom: 8 }}>🌸</span>
+                    <span style={{ fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 2, color: 'var(--text-muted)' }}>Aroma</span>
+                    <p style={{ fontFamily: 'Outfit', fontWeight: 700, fontSize: '1rem', color: 'var(--text-primary)', marginTop: 4 }}>{product.aroma}</p>
+                  </div>
+                )}
+                {product.caffeine_level && (
+                  <div style={{ background: 'var(--dark-card, rgba(255,255,255,0.04))', borderRadius: 16, padding: '24px 20px', textAlign: 'center', border: '1px solid var(--border-subtle, rgba(255,255,255,0.06))' }}>
+                    <span style={{ fontSize: '2rem', display: 'block', marginBottom: 8 }}>⚡</span>
+                    <span style={{ fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 2, color: 'var(--text-muted)' }}>Caffeine Level</span>
+                    <p style={{ fontFamily: 'Outfit', fontWeight: 700, fontSize: '1rem', color: 'var(--text-primary)', marginTop: 4 }}>{product.caffeine_level}</p>
+                  </div>
+                )}
+                {product.benefits && (
+                  <div style={{ background: 'var(--dark-card, rgba(255,255,255,0.04))', borderRadius: 16, padding: '24px 20px', textAlign: 'center', border: '1px solid var(--border-subtle, rgba(255,255,255,0.06))', gridColumn: 'span 2' }}>
+                    <span style={{ fontSize: '2rem', display: 'block', marginBottom: 8 }}>💚</span>
+                    <span style={{ fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 2, color: 'var(--text-muted)' }}>Benefits</span>
+                    <p style={{ fontFamily: 'Outfit', fontWeight: 700, fontSize: '1rem', color: 'var(--text-primary)', marginTop: 4 }}>{product.benefits}</p>
+                  </div>
+                )}
               </div>
-            )}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ══════════════════════════════════════════════
+          THE PERFECT STEEP
+          ══════════════════════════════════════════════ */}
+      <section style={{ padding: '60px 0' }}>
+        <div className="container">
+          <div style={{ maxWidth: 900, margin: '0 auto' }}>
+            <p style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 3, color: 'var(--gold-primary)', marginBottom: 8, textAlign: 'center' }}>The Perfect Steep</p>
+            <h2 style={{ fontFamily: 'Outfit', fontSize: '1.6rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 8, textAlign: 'center' }}>
+              Brewing Guide
+            </h2>
+            <p style={{ color: 'var(--text-muted)', textAlign: 'center', fontSize: '0.9rem', marginBottom: 36, maxWidth: 500, marginLeft: 'auto', marginRight: 'auto' }}>
+              To enjoy the full complexity of these leaves without any bitterness, follow these steps:
+            </p>
+            <div className={styles.brewingGrid}>
+              {[
+                { icon: '🌡️', label: 'Water Temp', value: product.steep_temp || brewing.temp },
+                { icon: '⚖️', label: 'Amount', value: product.steep_amount || brewing.ratio },
+                { icon: '⏱️', label: 'Steep Time', value: product.steep_time || brewing.time },
+                { icon: '🔄', label: 'Re-steeping', value: product.steep_resteep || 'Enjoy fresh' },
+              ].map(b => (
+                <div key={b.label} className={styles.brewingCard}>
+                  <span className={styles.brewingIcon}>{b.icon}</span>
+                  <span className={styles.brewingLabel}>{b.label}</span>
+                  <span className={styles.brewingValue}>{b.value}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
+
+      {/* ══════════════════════════════════════════════
+          WHY CHOOSE
+          ══════════════════════════════════════════════ */}
+      {product.why_choose && (
+        <section style={{ padding: '60px 0', background: 'var(--surface-secondary, rgba(255,255,255,0.02))' }}>
+          <div className="container">
+            <div style={{ maxWidth: 800, margin: '0 auto', textAlign: 'center' }}>
+              <span style={{ fontSize: '3rem', display: 'block', marginBottom: 16 }}>💎</span>
+              <p style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 3, color: 'var(--gold-primary)', marginBottom: 8 }}>Why Choose {product.name}</p>
+              <p style={{ fontSize: '1.1rem', lineHeight: 1.8, color: 'var(--text-secondary)' }}>
+                {product.why_choose}
+              </p>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Related */}
       {related.length > 0 && (

@@ -28,6 +28,18 @@ export type Database = {
           is_featured: boolean;
           is_active: boolean;
           created_at: string;
+          // Extended tea details
+          experience: string | null;
+          tea_type: string | null;
+          flavor_profile: string | null;
+          aroma: string | null;
+          caffeine_level: string | null;
+          benefits: string | null;
+          steep_temp: string | null;
+          steep_amount: string | null;
+          steep_time: string | null;
+          steep_resteep: string | null;
+          why_choose: string | null;
         };
         Insert: Omit<Database['public']['Tables']['products']['Row'], 'id' | 'created_at'>;
         Update: Partial<Database['public']['Tables']['products']['Insert']>;
