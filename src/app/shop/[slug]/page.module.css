@@ -1,0 +1,293 @@
+.page { padding-bottom: 80px; }
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 24px 0 16px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+.breadcrumb a { color: var(--text-muted); transition: color var(--transition-fast); }
+.breadcrumb a:hover { color: var(--gold-light); }
+.breadcrumb span:not(:last-child) { color: var(--glass-border); }
+
+.productSection { padding: 24px 0 64px; }
+
+.productGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: start;
+}
+
+/* Image */
+.imagePanel {}
+.imageWrap {
+  position: relative;
+  height: 520px;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
+  background: var(--dark-surface);
+}
+.imageTopLeft {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 1;
+}
+
+/* Info */
+.infoPanel { display: flex; flex-direction: column; gap: 20px; }
+
+.origin {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.productName {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-weight: 900;
+  color: var(--text-primary);
+  line-height: 1.15;
+  margin: 0;
+}
+
+.productDesc {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  font-style: italic;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.ratingRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.stars { color: var(--gold-primary); letter-spacing: 2px; font-size: 0.9rem; }
+.ratingCount { font-size: 0.82rem; color: var(--text-muted); }
+.stockStatus { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--text-muted); margin-left: auto; }
+.stockDot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+.stockDotGood { background: #4ade80; box-shadow: 0 0 6px rgba(74,222,128,0.6); }
+.stockDotLow { background: #fbbf24; }
+
+.priceSection { display: flex; align-items: baseline; gap: 8px; }
+.price {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--gold-light), var(--gold-primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.priceNote { font-size: 0.82rem; color: var(--text-muted); }
+
+.optionGroup { display: flex; flex-direction: column; gap: 10px; }
+.optionLabel {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.optionValue { color: var(--text-primary); }
+
+.weightOptions { display: flex; gap: 10px; flex-wrap: wrap; }
+.weightBtn {
+  padding: 9px 22px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.weightBtn:hover { border-color: var(--gold-primary); color: var(--gold-light); }
+.weightBtnActive {
+  border-color: var(--gold-primary) !important;
+  background: rgba(201,168,76,0.15) !important;
+  color: var(--gold-light) !important;
+}
+
+.qtyRow { display: flex; align-items: center; gap: 20px; }
+.qtyControl {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-full);
+  padding: 8px 20px;
+}
+.qtyBtn {
+  background: none; border: none; color: var(--text-secondary);
+  font-size: 1.2rem; font-weight: 600; cursor: pointer;
+  transition: color var(--transition-fast); padding: 0; line-height: 1;
+}
+.qtyBtn:hover { color: var(--gold-light); }
+.qtyNum {
+  font-family: 'Outfit'; font-size: 1rem; font-weight: 700;
+  color: var(--text-primary); min-width: 24px; text-align: center;
+}
+.totalPrice { font-size: 0.9rem; color: var(--text-secondary); font-weight: 500; }
+
+.ctaRow { display: flex; gap: 14px; }
+.spinner {
+  width: 16px; height: 16px;
+  border: 2px solid rgba(5,13,10,0.3);
+  border-top-color: var(--dark-bg);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+.trustBadges {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  padding-top: 16px;
+  border-top: 1px solid var(--glass-border);
+}
+.trustBadge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+/* Tabs */
+.tabsSection {
+  padding: 0 0 60px;
+  border-top: 1px solid var(--glass-border);
+}
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--glass-border);
+  margin-bottom: 36px;
+  overflow-x: auto;
+}
+
+.tab {
+  padding: 16px 24px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  border: none;
+  background: none;
+  cursor: pointer;
+  white-space: nowrap;
+  position: relative;
+  transition: color var(--transition-fast);
+}
+.tab::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--gold-primary);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+.tabActive { color: var(--gold-light); }
+.tabActive::after { opacity: 1; }
+.tab:hover { color: var(--text-primary); }
+
+.tabContent {}
+
+.descriptionContent p {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.9;
+  max-width: 780px;
+}
+
+.brewingContent { display: flex; flex-direction: column; gap: 24px; }
+.brewingGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.brewingCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 28px 20px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  text-align: center;
+}
+.brewingIcon { font-size: 2rem; }
+.brewingLabel { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.brewingValue { font-family: 'Outfit'; font-size: 1.1rem; font-weight: 700; color: var(--gold-light); }
+
+.brewingTip {
+  display: flex;
+  gap: 16px;
+  padding: 20px;
+  background: rgba(201,168,76,0.06);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  align-items: flex-start;
+}
+.brewingTip span { font-size: 1.2rem; flex-shrink: 0; }
+
+.originContent {}
+.originCard {
+  display: flex;
+  gap: 32px;
+  align-items: center;
+  padding: 36px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+}
+.originCard h3 {
+  font-family: 'Outfit';
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 12px;
+}
+.originCard p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+@media (max-width: 900px) {
+  .productGrid { grid-template-columns: 1fr; gap: 36px; }
+  .imageWrap { height: 360px; }
+  .brewingGrid { grid-template-columns: 1fr; }
+  .originCard { flex-direction: column; text-align: center; }
+}
+
+@media (max-width: 600px) {
+  .trustBadges { grid-template-columns: 1fr; }
+  .ctaRow { flex-direction: column; }
+}

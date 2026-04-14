@@ -1,0 +1,272 @@
+'use client';
+
+import React, { useState } from 'react';
+import Image from 'next/image';
+import { PRODUCTS, ADMIN_EMAIL } from '@/lib/data';
+import { Product } from '@/lib/supabase';
+import Logo from '@/components/Logo/Logo';
+import styles from './page.module.css';
+
+const ADMIN_PASS = 'mukherjee2024';
+
+type Tab = 'products' | 'orders';
+
+const MOCK_ORDERS = [
+  { id: 'MTC001234', customer: 'Priya Sharma', email: 'priya@example.com', total: 1798, status: 'delivered', date: '2026-04-07', items: 2 },
+  { id: 'MTC001235', customer: 'Rahul Mehta', email: 'rahul@example.com', total: 899, status: 'shipped', date: '2026-04-08', items: 1 },
+  { id: 'MTC001236', customer: 'Ananya Kumar', email: 'ananya@example.com', total: 2547, status: 'confirmed', date: '2026-04-09', items: 3 },
+  { id: 'MTC001237', customer: 'Vikram Das', email: 'vikram@example.com', total: 599, status: 'pending', date: '2026-04-09', items: 1 },
+];
+
+const STATUS_COLORS: Record<string, string> = {
+  pending: 'var(--badge-warning, #fde047)',
+  confirmed: '#60a5fa',
+  shipped: '#c084fc',
+  delivered: '#4ade80',
+  cancelled: '#f87171',
+};
+
+export default function AdminPage() {
+  const [authed, setAuthed] = useState(false);
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPass, setLoginPass] = useState('');
+  const [loginError, setLoginError] = useState('');
+  const [tab, setTab] = useState<Tab>('products');
+  const [products, setProducts] = useState<Product[]>(PRODUCTS);
+  const [orders, setOrders] = useState(MOCK_ORDERS);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [newProduct, setNewProduct] = useState({ name: '', price: '', description: '', category: 'Black Tea', stock: '', image_url: '/assam-breakfast.png' });
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (loginEmail === ADMIN_EMAIL && loginPass === ADMIN_PASS) {
+      setAuthed(true);
+    } else {
+      setLoginError('Invalid email or password');
+    }
+  };
+
+  const handleDeleteProduct = (id: string) => {
+    if (confirm('Delete this product?')) {
+      setProducts(prev => prev.filter(p => p.id !== id));
+    }
+  };
+
+  const handleStatusChange = (orderId: string, status: string) => {
+    setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status } : o));
+  };
+
+  const handleAddProduct = () => {
+    if (!newProduct.name || !newProduct.price) return;
+    const p: Product = {
+      id: Date.now().toString(),
+      name: newProduct.name,
+      slug: newProduct.name.toLowerCase().replace(/\s+/g, '-'),
+      description: newProduct.description,
+      long_description: null,
+      price: Number(newProduct.price),
+      stock: Number(newProduct.stock) || 0,
+      image_url: newProduct.image_url,
+      category: newProduct.category,
+      origin: 'India',
+      weight_options: ['100g', '250g'],
+      is_featured: false,
+      is_active: true,
+      created_at: new Date().toISOString(),
+    };
+    setProducts(prev => [p, ...prev]);
+    setShowAddForm(false);
+    setNewProduct({ name: '', price: '', description: '', category: 'Black Tea', stock: '', image_url: '/assam-breakfast.png' });
+  };
+
+  if (!authed) {
+    return (
+      <div className={styles.loginPage}>
+        <div className={styles.loginCard}>
+          <div className={styles.loginHeader}>
+            <Logo height={64} className={styles.loginLogo} />
+            <h1 className={styles.loginTitle}>Mukherjee Tea Company</h1>
+            <p className={styles.loginSub}>Admin Control Panel — Protected Area</p>
+          </div>
+          <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div className="form-group">
+              <label className="form-label">Admin Email</label>
+              <input type="email" value={loginEmail} onChange={e => setLoginEmail(e.target.value)} placeholder="admin@mukherjeetea.com" className="form-input" id="admin-email" />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Password</label>
+              <input type="password" value={loginPass} onChange={e => setLoginPass(e.target.value)} placeholder="••••••••••" className="form-input" id="admin-password" />
+            </div>
+            {loginError && <p style={{ color: '#f87171', fontSize: '0.85rem' }}>{loginError}</p>}
+            <button type="submit" className="btn btn-primary btn-lg" style={{ width: '100%', justifyContent: 'center', marginTop: 8 }} id="admin-login-btn">
+              Login to Dashboard
+            </button>
+          </form>
+          <p style={{ textAlign: 'center', fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: 12 }}>Demo: admin@mukherjeetea.com / mukherjee2024</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.adminPage}>
+      {/* Sidebar */}
+      <aside className={styles.sidebar}>
+        <div className={styles.sidebarLogo}>
+          <Logo height={42} />
+          <div className={styles.sidebarLogoText}>
+            <p className={styles.sidebarBrandName}>Mukherjee Tea</p>
+            <p className={styles.sidebarAdminText}>Admin Panel</p>
+          </div>
+        </div>
+        <nav className={styles.sidebarNav}>
+          <button onClick={() => setTab('products')} className={`${styles.navItem} ${tab === 'products' ? styles.navItemActive : ''}`} id="admin-tab-products">
+            📦 Products
+          </button>
+          <button onClick={() => setTab('orders')} className={`${styles.navItem} ${tab === 'orders' ? styles.navItemActive : ''}`} id="admin-tab-orders">
+            📋 Orders
+          </button>
+        </nav>
+        <div className={styles.sidebarStats}>
+          <div className={styles.stat}><span className={styles.statVal}>{products.length}</span><span className={styles.statLabel}>Products</span></div>
+          <div className={styles.stat}><span className={styles.statVal}>{orders.length}</span><span className={styles.statLabel}>Orders</span></div>
+          <div className={styles.stat}><span className={styles.statVal}>₹{orders.reduce((s,o) => s + o.total, 0).toLocaleString('en-IN')}</span><span className={styles.statLabel}>Revenue</span></div>
+        </div>
+        <button onClick={() => setAuthed(false)} className="btn btn-ghost" style={{ margin: '0 12px', fontSize: '0.82rem' }}>
+          🚪 Logout
+        </button>
+      </aside>
+
+      {/* Main */}
+      <main className={styles.main}>
+        {tab === 'products' && (
+          <div className={styles.panel}>
+            <div className={styles.panelHeader}>
+              <h2 className={styles.panelTitle}>Products</h2>
+              <button onClick={() => setShowAddForm(!showAddForm)} className="btn btn-primary" id="admin-add-product-btn">
+                + Add Product
+              </button>
+            </div>
+
+            {showAddForm && (
+              <div className={styles.addForm}>
+                <h3 style={{ fontFamily: 'Outfit', fontWeight: 700, color: 'var(--text-primary)', marginBottom: 16, fontSize: '1rem' }}>New Product</h3>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+                  <div className="form-group">
+                    <label className="form-label">Name *</label>
+                    <input value={newProduct.name} onChange={e => setNewProduct(p => ({...p, name: e.target.value}))} placeholder="Product name" className="form-input" />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Price (₹) *</label>
+                    <input type="number" value={newProduct.price} onChange={e => setNewProduct(p => ({...p, price: e.target.value}))} placeholder="999" className="form-input" />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Category</label>
+                    <select value={newProduct.category} onChange={e => setNewProduct(p => ({...p, category: e.target.value}))} className="form-select">
+                      {['Black Tea','Green Tea','White Tea','Oolong Tea','Herbal & Blends'].map(c => <option key={c}>{c}</option>)}
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Stock</label>
+                    <input type="number" value={newProduct.stock} onChange={e => setNewProduct(p => ({...p, stock: e.target.value}))} placeholder="50" className="form-input" />
+                  </div>
+                  <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                    <label className="form-label">Description</label>
+                    <input value={newProduct.description} onChange={e => setNewProduct(p => ({...p, description: e.target.value}))} placeholder="Short description..." className="form-input" />
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: 12, marginTop: 16 }}>
+                  <button onClick={handleAddProduct} className="btn btn-primary">Save Product</button>
+                  <button onClick={() => setShowAddForm(false)} className="btn btn-secondary">Cancel</button>
+                </div>
+              </div>
+            )}
+
+            <div className={styles.productsTable}>
+              <div className={styles.tableHeader}>
+                <span>Product</span>
+                <span>Category</span>
+                <span>Price</span>
+                <span>Stock</span>
+                <span>Actions</span>
+              </div>
+              {products.map(p => (
+                <div key={p.id} className={styles.tableRow}>
+                  <div className={styles.productCell}>
+                    <div style={{ width: 44, height: 44, borderRadius: 8, overflow: 'hidden', position: 'relative', flexShrink: 0, background: 'var(--dark-surface)' }}>
+                      <Image src={p.image_url} alt={p.name} fill style={{ objectFit: 'cover' }} />
+                    </div>
+                    <div>
+                      <p style={{ fontFamily: 'Outfit', fontWeight: 600, fontSize: '0.875rem', color: 'var(--text-primary)' }}>{p.name}</p>
+                      <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{p.origin}</p>
+                    </div>
+                  </div>
+                  <span className="badge badge-green" style={{ fontSize: '0.72rem' }}>{p.category}</span>
+                  <span style={{ fontFamily: 'Outfit', fontWeight: 700, color: 'var(--gold-light)' }}>₹{p.price.toLocaleString('en-IN')}</span>
+                  <span style={{ fontSize: '0.875rem', color: p.stock < 20 ? '#fbbf24' : 'var(--text-secondary)' }}>{p.stock}</span>
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    <button className="btn btn-sm btn-secondary" onClick={() => setEditingProduct(p)} id={`admin-edit-${p.id}`}>Edit</button>
+                    <button className="btn btn-sm btn-danger" onClick={() => handleDeleteProduct(p.id)} id={`admin-delete-${p.id}`}>Delete</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {tab === 'orders' && (
+          <div className={styles.panel}>
+            <div className={styles.panelHeader}>
+              <h2 className={styles.panelTitle}>Orders</h2>
+            </div>
+            <div className={styles.productsTable}>
+              <div className={styles.tableHeader} style={{ gridTemplateColumns: '1fr 1fr 0.7fr 0.7fr 1fr 0.8fr' }}>
+                <span>Order ID</span>
+                <span>Customer</span>
+                <span>Items</span>
+                <span>Total</span>
+                <span>Status</span>
+                <span>Date</span>
+              </div>
+              {orders.map(o => (
+                <div key={o.id} className={styles.tableRow} style={{ gridTemplateColumns: '1fr 1fr 0.7fr 0.7fr 1fr 0.8fr' }}>
+                  <span style={{ fontFamily: 'Outfit', fontWeight: 700, color: 'var(--gold-light)', fontSize: '0.875rem' }}>#{o.id}</span>
+                  <div>
+                    <p style={{ fontFamily: 'Outfit', fontWeight: 600, fontSize: '0.875rem', color: 'var(--text-primary)' }}>{o.customer}</p>
+                    <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{o.email}</p>
+                  </div>
+                  <span style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>{o.items}</span>
+                  <span style={{ fontFamily: 'Outfit', fontWeight: 700, color: 'var(--text-primary)' }}>₹{o.total.toLocaleString('en-IN')}</span>
+                  <div>
+                    <select
+                      value={o.status}
+                      onChange={e => handleStatusChange(o.id, e.target.value)}
+                      style={{
+                        background: 'var(--glass-bg)',
+                        border: `1px solid ${STATUS_COLORS[o.status]}55`,
+                        color: STATUS_COLORS[o.status],
+                        borderRadius: 'var(--radius-full)',
+                        padding: '4px 12px',
+                        fontSize: '0.78rem',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        appearance: 'none',
+                        outline: 'none',
+                      }}
+                    >
+                      {['pending','confirmed','shipped','delivered','cancelled'].map(s => (
+                        <option key={s} value={s} style={{ background: '#0a1a12', color: '#f0ead6' }}>{s.charAt(0).toUpperCase()+s.slice(1)}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{o.date}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </main>
+    </div>
+  );
+}
