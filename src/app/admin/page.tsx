@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Image from 'next/image';
 import { PRODUCTS, ADMIN_EMAIL, CATEGORIES } from '@/lib/data';
-import { Product, supabase } from '@/lib/supabase';
+import { Product } from '@/lib/supabase';
+import { createClient } from '@/utils/supabase/client';
 import Logo from '@/components/Logo/Logo';
 import styles from './page.module.css';
 import { useToast } from '@/context/ToastContext';
@@ -24,6 +25,7 @@ const STATUS_COLORS: Record<string, string> = {
 export default function AdminPage() {
   const { showToast } = useToast();
   const { signOut } = useAuth();
+  const supabase = useMemo(() => createClient(), []);
   const [tab, setTab] = useState<Tab>('products');
   const [products, setProducts] = useState<Product[]>([]);
   const [orders, setOrders] = useState(MOCK_ORDERS);
