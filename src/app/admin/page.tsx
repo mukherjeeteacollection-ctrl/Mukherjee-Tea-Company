@@ -432,6 +432,155 @@ export default function AdminPage() {
           </div>
         )}
       </main>
+
+      {/* ══════════════════════════════════════════════
+          EDIT PRODUCT MODAL
+          ══════════════════════════════════════════════ */}
+      {editingProduct && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 9999,
+          background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(6px)',
+          display: 'flex', alignItems: 'flex-start', justifyContent: 'center',
+          padding: '40px 20px', overflowY: 'auto',
+        }}>
+          <div style={{
+            background: 'var(--dark-card, #111)', borderRadius: 20, padding: 32,
+            width: '100%', maxWidth: 720, border: '1px solid var(--border-subtle, #333)',
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+              <h2 style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: '1.3rem', color: 'var(--text-primary)' }}>✏️ Edit Product</h2>
+              <button onClick={() => setEditingProduct(null)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: '1.5rem', cursor: 'pointer' }}>✕</button>
+            </div>
+
+            {/* General */}
+            <h3 style={{ fontFamily: 'Outfit', fontWeight: 700, color: 'var(--text-primary)', marginBottom: 14, fontSize: '1rem', borderBottom: '1px solid var(--border-subtle, #333)', paddingBottom: 8 }}>📦 General</h3>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 20 }}>
+              <div className="form-group">
+                <label className="form-label">Name</label>
+                <input className="form-input" value={editingProduct.name} onChange={e => setEditingProduct({ ...editingProduct, name: e.target.value })} />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Price (₹)</label>
+                <input className="form-input" type="number" value={editingProduct.price} onChange={e => setEditingProduct({ ...editingProduct, price: Number(e.target.value) })} />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Category</label>
+                <select className="form-select" value={editingProduct.category} onChange={e => setEditingProduct({ ...editingProduct, category: e.target.value })}>
+                  {CATEGORIES.filter(c => c.id !== 'all').map(c => <option key={c.id} value={c.id}>{c.label}</option>)}
+                </select>
+              </div>
+              <div className="form-group">
+                <label className="form-label">Stock</label>
+                <input className="form-input" type="number" value={editingProduct.stock} onChange={e => setEditingProduct({ ...editingProduct, stock: Number(e.target.value) })} />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Origin</label>
+                <input className="form-input" value={editingProduct.origin || ''} onChange={e => setEditingProduct({ ...editingProduct, origin: e.target.value })} />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Weight Options (comma separated)</label>
+                <input className="form-input" value={(editingProduct.weight_options || []).join(', ')} onChange={e => setEditingProduct({ ...editingProduct, weight_options: e.target.value.split(',').map(s => s.trim()).filter(Boolean) })} />
+              </div>
+              <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                <label className="form-label">Replace Image</label>
+                <input type="file" accept="image/*" onChange={e => setImageFile(e.target.files?.[0] || null)} className="form-input" style={{ paddingTop: 8 }} />
+              </div>
+              <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                <label className="form-label">Short Description</label>
+                <input className="form-input" value={editingProduct.description} onChange={e => setEditingProduct({ ...editingProduct, description: e.target.value })} />
+              </div>
+              <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                <label className="form-label">Long Description</label>
+                <textarea className="form-input" rows={3} style={{ resize: 'vertical' }} value={editingProduct.long_description || ''} onChange={e => setEditingProduct({ ...editingProduct, long_description: e.target.value })} />
+              </div>
+              <div className="form-group">
+                <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <input type="checkbox" checked={editingProduct.is_featured} onChange={e => setEditingProduct({ ...editingProduct, is_featured: e.target.checked })} />
+                  Featured Product
+                </label>
+              </div>
+              <div className="form-group">
+                <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <input type="checkbox" checked={editingProduct.is_active} onChange={e => setEditingProduct({ ...editingProduct, is_active: e.target.checked })} />
+                  Active (visible in shop)
+                </label>
+              </div>
+            </div>
+
+            {/* The Experience */}
+            <h3 style={{ fontFamily: 'Outfit', fontWeight: 700, color: 'var(--text-primary)', marginBottom: 14, fontSize: '1rem', borderBottom: '1px solid var(--border-subtle, #333)', paddingBottom: 8 }}>✨ The Experience</h3>
+            <div className="form-group" style={{ marginBottom: 20 }}>
+              <textarea className="form-input" rows={3} style={{ resize: 'vertical' }} value={editingProduct.experience || ''} onChange={e => setEditingProduct({ ...editingProduct, experience: e.target.value })} placeholder="Sensory experience description..." />
+            </div>
+
+            {/* Product Details */}
+            <h3 style={{ fontFamily: 'Outfit', fontWeight: 700, color: 'var(--text-primary)', marginBottom: 14, fontSize: '1rem', borderBottom: '1px solid var(--border-subtle, #333)', paddingBottom: 8 }}>🍃 Product Details</h3>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 20 }}>
+              <div className="form-group">
+                <label className="form-label">Type</label>
+                <input className="form-input" value={editingProduct.tea_type || ''} onChange={e => setEditingProduct({ ...editingProduct, tea_type: e.target.value })} />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Flavor Profile</label>
+                <input className="form-input" value={editingProduct.flavor_profile || ''} onChange={e => setEditingProduct({ ...editingProduct, flavor_profile: e.target.value })} />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Aroma</label>
+                <input className="form-input" value={editingProduct.aroma || ''} onChange={e => setEditingProduct({ ...editingProduct, aroma: e.target.value })} />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Caffeine Level</label>
+                <select className="form-select" value={editingProduct.caffeine_level || ''} onChange={e => setEditingProduct({ ...editingProduct, caffeine_level: e.target.value })}>
+                  <option value="">Select...</option>
+                  <option value="None">None</option>
+                  <option value="Low">Low</option>
+                  <option value="Medium">Medium</option>
+                  <option value="High">High</option>
+                </select>
+              </div>
+              <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                <label className="form-label">Benefits</label>
+                <input className="form-input" value={editingProduct.benefits || ''} onChange={e => setEditingProduct({ ...editingProduct, benefits: e.target.value })} />
+              </div>
+            </div>
+
+            {/* The Perfect Steep */}
+            <h3 style={{ fontFamily: 'Outfit', fontWeight: 700, color: 'var(--text-primary)', marginBottom: 14, fontSize: '1rem', borderBottom: '1px solid var(--border-subtle, #333)', paddingBottom: 8 }}>☕ The Perfect Steep</h3>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 20 }}>
+              <div className="form-group">
+                <label className="form-label">Water Temp</label>
+                <input className="form-input" value={editingProduct.steep_temp || ''} onChange={e => setEditingProduct({ ...editingProduct, steep_temp: e.target.value })} />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Amount</label>
+                <input className="form-input" value={editingProduct.steep_amount || ''} onChange={e => setEditingProduct({ ...editingProduct, steep_amount: e.target.value })} />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Steep Time</label>
+                <input className="form-input" value={editingProduct.steep_time || ''} onChange={e => setEditingProduct({ ...editingProduct, steep_time: e.target.value })} />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Re-steeping</label>
+                <input className="form-input" value={editingProduct.steep_resteep || ''} onChange={e => setEditingProduct({ ...editingProduct, steep_resteep: e.target.value })} />
+              </div>
+            </div>
+
+            {/* Why Choose */}
+            <h3 style={{ fontFamily: 'Outfit', fontWeight: 700, color: 'var(--text-primary)', marginBottom: 14, fontSize: '1rem', borderBottom: '1px solid var(--border-subtle, #333)', paddingBottom: 8 }}>💎 Why Choose</h3>
+            <div className="form-group" style={{ marginBottom: 24 }}>
+              <textarea className="form-input" rows={3} style={{ resize: 'vertical' }} value={editingProduct.why_choose || ''} onChange={e => setEditingProduct({ ...editingProduct, why_choose: e.target.value })} />
+            </div>
+
+            {/* Actions */}
+            <div style={{ display: 'flex', gap: 12 }}>
+              <button onClick={handleUpdateProduct} disabled={uploading} className="btn btn-primary" style={{ flex: 1 }}>
+                {uploading ? 'Saving...' : '✅ Save Changes'}
+              </button>
+              <button onClick={() => { setEditingProduct(null); setImageFile(null); }} className="btn btn-secondary">Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
