@@ -147,13 +147,13 @@ export default function AdminPage() {
 
       // Remove fields that shouldn't be updated (id, created_at)
       const { id, created_at, ...updateData } = editingProduct;
-      
+
       const { error } = await (supabase.from('products') as any)
         .update({ ...updateData, image_url: finalImageUrl })
         .eq('id', id);
-      
+
       if (error) throw error;
-      
+
       showToast('Product updated successfully', 'success');
       setEditingProduct(null);
       setImageFile(null);
@@ -188,7 +188,7 @@ export default function AdminPage() {
         is_featured: false,
         is_active: true,
       };
-      
+
       const { error } = await (supabase.from('products') as any).insert([p]);
       if (error) throw error;
 
@@ -255,7 +255,7 @@ export default function AdminPage() {
         <div className={styles.sidebarStats}>
           <div className={styles.stat}><span className={styles.statVal}>{products.length}</span><span className={styles.statLabel}>Products</span></div>
           <div className={styles.stat}><span className={styles.statVal}>{orders.length}</span><span className={styles.statLabel}>Orders</span></div>
-          <div className={styles.stat}><span className={styles.statVal}>₹{orders.reduce((s,o) => s + o.total, 0).toLocaleString('en-IN')}</span><span className={styles.statLabel}>Revenue</span></div>
+          <div className={styles.stat}><span className={styles.statVal}>₹{orders.reduce((s, o) => s + o.total, 0).toLocaleString('en-IN')}</span><span className={styles.statLabel}>Revenue</span></div>
         </div>
         <button onClick={handleLogout} className="btn btn-ghost" style={{ margin: '0 12px', fontSize: '0.82rem' }}>
           🚪 Logout
@@ -286,21 +286,21 @@ export default function AdminPage() {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
                   <div className="form-group">
                     <label className="form-label">Name *</label>
-                    <input value={newProduct.name} onChange={e => setNewProduct(p => ({...p, name: e.target.value}))} placeholder="Product name" className="form-input" />
+                    <input value={newProduct.name} onChange={e => setNewProduct(p => ({ ...p, name: e.target.value }))} placeholder="Product name" className="form-input" />
                   </div>
                   <div className="form-group">
                     <label className="form-label">Price (₹) *</label>
-                    <input type="number" value={newProduct.price} onChange={e => setNewProduct(p => ({...p, price: e.target.value}))} placeholder="999" className="form-input" />
+                    <input type="number" value={newProduct.price} onChange={e => setNewProduct(p => ({ ...p, price: e.target.value }))} placeholder="999" className="form-input" />
                   </div>
                   <div className="form-group">
                     <label className="form-label">Category</label>
-                    <select value={newProduct.category} onChange={e => setNewProduct(p => ({...p, category: e.target.value}))} className="form-select">
+                    <select value={newProduct.category} onChange={e => setNewProduct(p => ({ ...p, category: e.target.value }))} className="form-select">
                       {CATEGORIES.filter(c => c.id !== 'all').map(c => <option key={c.id} value={c.id}>{c.label}</option>)}
                     </select>
                   </div>
                   <div className="form-group">
                     <label className="form-label">Stock</label>
-                    <input type="number" value={newProduct.stock} onChange={e => setNewProduct(p => ({...p, stock: e.target.value}))} placeholder="50" className="form-input" />
+                    <input type="number" value={newProduct.stock} onChange={e => setNewProduct(p => ({ ...p, stock: e.target.value }))} placeholder="50" className="form-input" />
                   </div>
                   <div className="form-group" style={{ gridColumn: '1 / -1' }}>
                     <label className="form-label">Product Image</label>
@@ -308,7 +308,7 @@ export default function AdminPage() {
                   </div>
                   <div className="form-group" style={{ gridColumn: '1 / -1' }}>
                     <label className="form-label">Description</label>
-                    <input value={newProduct.description} onChange={e => setNewProduct(p => ({...p, description: e.target.value}))} placeholder="Short description..." className="form-input" />
+                    <input value={newProduct.description} onChange={e => setNewProduct(p => ({ ...p, description: e.target.value }))} placeholder="Short description..." className="form-input" />
                   </div>
                 </div>
                 <div style={{ display: 'flex', gap: 12, marginTop: 16 }}>
@@ -392,8 +392,8 @@ export default function AdminPage() {
                         outline: 'none',
                       }}
                     >
-                      {['pending','confirmed','shipped','delivered','cancelled'].map(s => (
-                        <option key={s} value={s} style={{ background: '#0a1a12', color: '#f0ead6' }}>{s.charAt(0).toUpperCase()+s.slice(1)}</option>
+                      {['pending', 'confirmed', 'shipped', 'delivered', 'cancelled'].map(s => (
+                        <option key={s} value={s} style={{ background: '#0a1a12', color: '#f0ead6' }}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>
                       ))}
                     </select>
                   </div>

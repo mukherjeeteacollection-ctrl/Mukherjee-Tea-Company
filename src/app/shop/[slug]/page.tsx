@@ -31,8 +31,7 @@ function ProductDetail({ slug }: { slug: string }) {
 
   useEffect(() => {
     async function fetchProduct() {
-      const { data, error } = await supabase
-        .from('products')
+      const { data, error } = await (supabase.from('products') as any)
         .select('*')
         .eq('slug', slug)
         .single();
@@ -44,8 +43,7 @@ function ProductDetail({ slug }: { slug: string }) {
         }
         
         // Fetch related products
-        const { data: relatedData } = await supabase
-          .from('products')
+        const { data: relatedData } = await (supabase.from('products') as any)
           .select('*')
           .eq('category', data.category)
           .neq('id', data.id)

@@ -17,8 +17,7 @@ export default function ShopPage() {
 
   useEffect(() => {
     async function getProducts() {
-      const { data, error } = await supabase
-        .from('products')
+      const { data, error } = await (supabase.from('products') as any)
         .select('*')
         .eq('is_active', true)
         .order('created_at', { ascending: false });

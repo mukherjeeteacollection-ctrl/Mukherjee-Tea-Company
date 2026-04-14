@@ -92,7 +92,7 @@ export default function CheckoutPage() {
             {(['cart', 'shipping', 'review'] as const).map((s, i) => (
               <React.Fragment key={s}>
                 <div className={`${styles.step} ${step === s ? styles.stepActive : (i < ['cart','shipping','review'].indexOf(step) ? styles.stepDone : '')}`}>
-                  <div className={styles.stepNum}>{step !== 'success' && i < ['cart','shipping','review'].indexOf(step) ? '✓' : i + 1}</div>
+                  <div className={styles.stepNum}>{i < ['cart','shipping','review'].indexOf(step) ? '✓' : i + 1}</div>
                   <span className={styles.stepLabel}>{s === 'cart' ? 'Cart' : s === 'shipping' ? 'Shipping' : 'Review'}</span>
                 </div>
                 {i < 2 && <div className={styles.stepLine} />}

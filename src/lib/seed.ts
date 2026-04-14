@@ -12,8 +12,7 @@ export async function seedProducts() {
     stock: Number(rest.stock),
   }));
 
-  const { data, error } = await supabase
-    .from('products')
+  const { data, error } = await (supabase.from('products') as any)
     .upsert(productsToInsert, { onConflict: 'slug' })
     .select();
 
