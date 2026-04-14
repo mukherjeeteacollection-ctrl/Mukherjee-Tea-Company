@@ -1,5 +1,7 @@
 'use client';
 
+import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { PRODUCTS, ADMIN_EMAIL, CATEGORIES } from '@/lib/data';
 import { Product, supabase } from '@/lib/supabase';
 import { seedProducts } from '@/lib/seed';
@@ -24,6 +26,7 @@ const STATUS_COLORS: Record<string, string> = {
   cancelled: '#f87171',
 };
 
+export default function AdminPage() {
   const { showToast } = useToast();
   const [authed, setAuthed] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -120,8 +123,17 @@ const STATUS_COLORS: Record<string, string> = {
     }
   };
 
-  const handleStatusChange = (orderId: string, status: string) => {
-    setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status } : o));
+  const handleStatusChange = async (orderId: string, status: string) => {
+    const { error } = await (supabase.from('orders') as any)
+      .update({ status })
+      .eq('id', orderId);
+
+    if (error) {
+      showToast('Error updating status', 'error');
+    } else {
+      setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: status as any } : o));
+      showToast('Order status updated', 'success');
+    }
   };
 
   const handleUpdateProduct = async () => {
@@ -133,10 +145,12 @@ const STATUS_COLORS: Record<string, string> = {
         finalImageUrl = await uploadImage(imageFile);
       }
 
-      const { error } = await supabase
-        .from('products')
-        .update({ ...editingProduct, image_url: finalImageUrl })
-        .eq('id', editingProduct.id);
+      // Remove fields that shouldn't be updated (id, created_at)
+      const { id, created_at, ...updateData } = editingProduct;
+      
+      const { error } = await (supabase.from('products') as any)
+        .update({ ...updateData, image_url: finalImageUrl })
+        .eq('id', id);
       
       if (error) throw error;
       
@@ -175,7 +189,7 @@ const STATUS_COLORS: Record<string, string> = {
         is_active: true,
       };
       
-      const { error } = await supabase.from('products').insert([p]);
+      const { error } = await (supabase.from('products') as any).insert([p]);
       if (error) throw error;
 
       showToast('Product added successfully', 'success');

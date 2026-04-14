@@ -69,7 +69,7 @@ export default function CheckoutPage() {
     );
   }
 
-  if (state.items.length === 0 && step !== 'success') {
+  if (state.items.length === 0) {
     return (
       <div className={styles.emptyPage}>
         <div className={styles.emptyCard}>
