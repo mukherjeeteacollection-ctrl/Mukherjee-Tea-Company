@@ -48,7 +48,7 @@ export default function AboutPage() {
               </h2>
               <div style={{ width: 60, height: 3, background: 'linear-gradient(90deg, var(--gold-primary), var(--gold-dark))', borderRadius: 2, marginBottom: 24 }} />
               <p style={{ color: 'var(--text-secondary)', lineHeight: 1.9, fontSize: '0.95rem', marginBottom: 16 }}>
-                The Mukherjee Tea Company was founded by my grandfather, who spent his early years working in the tea gardens of Darjeeling. He was captivated by the complexity, the ritual, and the sheer joy of a perfectly brewed cup.
+                The MUKHERJEE TEA COMPANY was founded in 1971 by my grandfather, who spent his early years working in the tea gardens of Darjeeling. He was captivated by the complexity, the ritual, and the sheer joy of a perfectly brewed cup.
               </p>
               <p style={{ color: 'var(--text-secondary)', lineHeight: 1.9, fontSize: '0.95rem' }}>
                 That passion was passed down through generations — from father to son, from kitchen wisdom to careful curation. Today, we continue that legacy with the same devotion: sourcing only the finest teas, working directly with estates, and ensuring that every bag we sell is worthy of your trust.
@@ -113,7 +113,7 @@ export default function AboutPage() {
               Taste the Difference
             </h2>
             <p style={{ color: 'var(--text-secondary)', lineHeight: 1.8, marginBottom: 28 }}>
-              Join thousands of tea lovers who have made Mukherjee Tea Company their trusted source for exceptional, artisanal teas.
+              Join thousands of tea lovers who have made MUKHERJEE TEA COMPANY their trusted source for exceptional, artisanal teas.
             </p>
             <Link href="/shop" className="btn btn-primary btn-xl">
               Explore Our Collection

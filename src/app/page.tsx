@@ -154,7 +154,7 @@ export default function HomePage() {
               </h2>
               <div className={styles.goldLine} />
               <p className={styles.storyText}>
-                The Mukherjee Tea Company was born from a singular devotion — to source and share the most extraordinary teas that India's highlands have to offer. We work directly with small-estate farmers, ensuring fair prices, sustainable practices, and teas of unparalleled quality.
+                The MUKHERJEE TEA COMPANY was born in 1971 from a singular devotion — to source and share the most extraordinary teas that India's highlands have to offer. We work directly with small-estate farmers, ensuring fair prices, sustainable practices, and teas of unparalleled quality.
               </p>
               <p className={styles.storyText}>
                 Every batch is carefully hand-selected, tested for quality, and packed within hours of processing to preserve the full spectrum of flavors and aromas.

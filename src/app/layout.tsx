@@ -8,10 +8,10 @@ import CartDrawer from "@/components/CartDrawer/CartDrawer";
 
 export const metadata: Metadata = {
   title: {
-    default: "Mukherjee Tea Company | Premium Artisanal Teas",
-    template: "%s | Mukherjee Tea Company",
+    default: "MUKHERJEE TEA COMPANY | Premium Artisanal Teas Since 1971",
+    template: "%s | MUKHERJEE TEA COMPANY",
   },
-  description: "Discover the finest handcrafted teas from the gardens of Darjeeling, Assam and beyond. Mukherjee Tea Company — where every sip is an experience.",
+  description: "Discover the finest handcrafted teas from MUKHERJEE TEA COMPANY. Premium artisanal teas from the gardens of India since 1971.",
   keywords: "artisanal tea, Darjeeling tea, Assam tea, premium tea, handcrafted tea, loose leaf tea, Indian tea, buy tea online India",
   openGraph: {
     title: "Mukherjee Tea Company | Premium Artisanal Teas",

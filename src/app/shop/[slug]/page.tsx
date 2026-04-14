@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState, use } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { PRODUCTS } from '@/lib/data';
+import { Product, supabase } from '@/lib/supabase';
 import { useCart } from '@/context/CartContext';
 import { useToast } from '@/context/ToastContext';
 import ProductCard from '@/components/ProductCard/ProductCard';
@@ -18,14 +18,53 @@ const BREWING: Record<string, { temp: string; time: string; ratio: string; tips:
 };
 
 function ProductDetail({ slug }: { slug: string }) {
-  const product = PRODUCTS.find(p => p.slug === slug);
+  const [product, setProduct] = useState<Product | null>(null);
+  const [related, setRelated] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
   const { addItem } = useCart();
   const { showToast } = useToast();
 
-  const [selectedWeight, setSelectedWeight] = useState(product?.weight_options?.[0] || '100g');
+  const [selectedWeight, setSelectedWeight] = useState('100g');
   const [quantity, setQuantity] = useState(1);
   const [adding, setAdding] = useState(false);
   const [activeTab, setActiveTab] = useState<'description' | 'brewing' | 'origin'>('description');
+
+  useEffect(() => {
+    async function fetchProduct() {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .eq('slug', slug)
+        .single();
+      
+      if (data) {
+        setProduct(data);
+        if (data.weight_options?.[0]) {
+          setSelectedWeight(data.weight_options[0]);
+        }
+        
+        // Fetch related products
+        const { data: relatedData } = await supabase
+          .from('products')
+          .select('*')
+          .eq('category', data.category)
+          .neq('id', data.id)
+          .limit(3);
+        
+        if (relatedData) setRelated(relatedData);
+      }
+      setLoading(false);
+    }
+    fetchProduct();
+  }, [slug]);
+
+  if (loading) {
+    return (
+      <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div className={styles.spinner} />
+      </div>
+    );
+  }
 
   if (!product) {
     return (
@@ -38,7 +77,6 @@ function ProductDetail({ slug }: { slug: string }) {
     );
   }
 
-  const related = PRODUCTS.filter(p => p.id !== product.id && p.category === product.category).slice(0, 3);
   const brewing = BREWING[product.category] ?? BREWING['Black Tea'];
 
   const handleAdd = async () => {

@@ -1,13 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
-import Image from 'next/image';
-import { PRODUCTS, ADMIN_EMAIL } from '@/lib/data';
-import { Product } from '@/lib/supabase';
+import { PRODUCTS, ADMIN_EMAIL, CATEGORIES } from '@/lib/data';
+import { Product, supabase } from '@/lib/supabase';
+import { seedProducts } from '@/lib/seed';
 import Logo from '@/components/Logo/Logo';
 import styles from './page.module.css';
-
-const ADMIN_PASS = 'mukherjee2024';
+import { useToast } from '@/context/ToastContext';
 
 type Tab = 'products' | 'orders';
 
@@ -26,30 +24,99 @@ const STATUS_COLORS: Record<string, string> = {
   cancelled: '#f87171',
 };
 
-export default function AdminPage() {
+  const { showToast } = useToast();
   const [authed, setAuthed] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPass, setLoginPass] = useState('');
   const [loginError, setLoginError] = useState('');
   const [tab, setTab] = useState<Tab>('products');
-  const [products, setProducts] = useState<Product[]>(PRODUCTS);
+  const [products, setProducts] = useState<Product[]>([]);
   const [orders, setOrders] = useState(MOCK_ORDERS);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
-  const [newProduct, setNewProduct] = useState({ name: '', price: '', description: '', category: 'Black Tea', stock: '', image_url: '/assam-breakfast.png' });
+  const [uploading, setUploading] = useState(false);
+  const [migrating, setMigrating] = useState(false);
+  const [newProduct, setNewProduct] = useState({ name: '', price: '', description: '', category: 'Black Tea', stock: '', image_url: '' });
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
-  const handleLogin = (e: React.FormEvent) => {
+  React.useEffect(() => {
+    checkUser();
+    fetchProducts();
+  }, []);
+
+  const checkUser = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) setAuthed(true);
+    setLoading(false);
+  };
+
+  const fetchProducts = async () => {
+    const { data, error } = await supabase.from('products').select('*').order('created_at', { ascending: false });
+    if (data) setProducts(data);
+  };
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (loginEmail === ADMIN_EMAIL && loginPass === ADMIN_PASS) {
-      setAuthed(true);
+    setLoginError('');
+    const { error } = await supabase.auth.signInWithPassword({
+      email: loginEmail,
+      password: loginPass,
+    });
+    if (error) {
+      setLoginError(error.message);
     } else {
-      setLoginError('Invalid email or password');
+      setAuthed(true);
     }
   };
 
-  const handleDeleteProduct = (id: string) => {
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setAuthed(false);
+  };
+
+  const handleMigrate = async () => {
+    if (!confirm('This will upload all current local mock products to your Supabase database. Continue?')) return;
+    setMigrating(true);
+    const result = await seedProducts();
+    setMigrating(false);
+    if (result.success) {
+      showToast(`Successfully migrated ${result.count} products!`, 'success');
+      fetchProducts();
+    } else {
+      showToast('Migration failed. Ensure your SQL script was run and keys are correct.', 'error');
+    }
+  };
+
+  const uploadImage = async (file: File) => {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Math.random()}.${fileExt}`;
+    const filePath = `products/${fileName}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from('tea-images')
+      .upload(filePath, file);
+
+    if (uploadError) {
+      throw uploadError;
+    }
+
+    const { data } = supabase.storage
+      .from('tea-images')
+      .getPublicUrl(filePath);
+
+    return data.publicUrl;
+  };
+
+  const handleDeleteProduct = async (id: string) => {
     if (confirm('Delete this product?')) {
-      setProducts(prev => prev.filter(p => p.id !== id));
+      const { error } = await supabase.from('products').delete().eq('id', id);
+      if (error) {
+        showToast('Error deleting product', 'error');
+      } else {
+        showToast('Product deleted successfully', 'success');
+        fetchProducts();
+      }
     }
   };
 
@@ -57,27 +124,70 @@ export default function AdminPage() {
     setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status } : o));
   };
 
-  const handleAddProduct = () => {
+  const handleUpdateProduct = async () => {
+    if (!editingProduct) return;
+    setUploading(true);
+    try {
+      let finalImageUrl = editingProduct.image_url;
+      if (imageFile) {
+        finalImageUrl = await uploadImage(imageFile);
+      }
+
+      const { error } = await supabase
+        .from('products')
+        .update({ ...editingProduct, image_url: finalImageUrl })
+        .eq('id', editingProduct.id);
+      
+      if (error) throw error;
+      
+      showToast('Product updated successfully', 'success');
+      setEditingProduct(null);
+      setImageFile(null);
+      fetchProducts();
+    } catch (err: any) {
+      showToast(err.message || 'Error updating product', 'error');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleAddProduct = async () => {
     if (!newProduct.name || !newProduct.price) return;
-    const p: Product = {
-      id: Date.now().toString(),
-      name: newProduct.name,
-      slug: newProduct.name.toLowerCase().replace(/\s+/g, '-'),
-      description: newProduct.description,
-      long_description: null,
-      price: Number(newProduct.price),
-      stock: Number(newProduct.stock) || 0,
-      image_url: newProduct.image_url,
-      category: newProduct.category,
-      origin: 'India',
-      weight_options: ['100g', '250g'],
-      is_featured: false,
-      is_active: true,
-      created_at: new Date().toISOString(),
-    };
-    setProducts(prev => [p, ...prev]);
-    setShowAddForm(false);
-    setNewProduct({ name: '', price: '', description: '', category: 'Black Tea', stock: '', image_url: '/assam-breakfast.png' });
+    setUploading(true);
+    try {
+      let finalImageUrl = '/assam-breakfast.png'; // Fallback
+      if (imageFile) {
+        finalImageUrl = await uploadImage(imageFile);
+      }
+
+      const p = {
+        name: newProduct.name,
+        slug: newProduct.name.toLowerCase().replace(/\s+/g, '-'),
+        description: newProduct.description,
+        long_description: null,
+        price: Number(newProduct.price),
+        stock: Number(newProduct.stock) || 0,
+        image_url: finalImageUrl,
+        category: newProduct.category,
+        origin: 'India',
+        weight_options: ['100g', '250g'],
+        is_featured: false,
+        is_active: true,
+      };
+      
+      const { error } = await supabase.from('products').insert([p]);
+      if (error) throw error;
+
+      showToast('Product added successfully', 'success');
+      setShowAddForm(false);
+      setImageFile(null);
+      setNewProduct({ name: '', price: '', description: '', category: 'Black Tea', stock: '', image_url: '' });
+      fetchProducts();
+    } catch (err: any) {
+      showToast(err.message || 'Error adding product', 'error');
+    } finally {
+      setUploading(false);
+    }
   };
 
   if (!authed) {
@@ -86,7 +196,7 @@ export default function AdminPage() {
         <div className={styles.loginCard}>
           <div className={styles.loginHeader}>
             <Logo height={64} className={styles.loginLogo} />
-            <h1 className={styles.loginTitle}>Mukherjee Tea Company</h1>
+            <h1 className={styles.loginTitle}>MUKHERJEE TEA COMPANY</h1>
             <p className={styles.loginSub}>Admin Control Panel — Protected Area</p>
           </div>
           <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -116,7 +226,7 @@ export default function AdminPage() {
         <div className={styles.sidebarLogo}>
           <Logo height={42} />
           <div className={styles.sidebarLogoText}>
-            <p className={styles.sidebarBrandName}>Mukherjee Tea</p>
+            <p className={styles.sidebarBrandName}>MUKHERJEE TEA</p>
             <p className={styles.sidebarAdminText}>Admin Panel</p>
           </div>
         </div>
@@ -133,7 +243,7 @@ export default function AdminPage() {
           <div className={styles.stat}><span className={styles.statVal}>{orders.length}</span><span className={styles.statLabel}>Orders</span></div>
           <div className={styles.stat}><span className={styles.statVal}>₹{orders.reduce((s,o) => s + o.total, 0).toLocaleString('en-IN')}</span><span className={styles.statLabel}>Revenue</span></div>
         </div>
-        <button onClick={() => setAuthed(false)} className="btn btn-ghost" style={{ margin: '0 12px', fontSize: '0.82rem' }}>
+        <button onClick={handleLogout} className="btn btn-ghost" style={{ margin: '0 12px', fontSize: '0.82rem' }}>
           🚪 Logout
         </button>
       </aside>
@@ -144,9 +254,16 @@ export default function AdminPage() {
           <div className={styles.panel}>
             <div className={styles.panelHeader}>
               <h2 className={styles.panelTitle}>Products</h2>
-              <button onClick={() => setShowAddForm(!showAddForm)} className="btn btn-primary" id="admin-add-product-btn">
-                + Add Product
-              </button>
+              <div style={{ display: 'flex', gap: 12 }}>
+                {products.length === 0 && (
+                  <button onClick={handleMigrate} disabled={migrating} className="btn btn-secondary">
+                    {migrating ? 'Migrating...' : '🚀 Migrate Local Data'}
+                  </button>
+                )}
+                <button onClick={() => setShowAddForm(!showAddForm)} className="btn btn-primary" id="admin-add-product-btn">
+                  + Add Product
+                </button>
+              </div>
             </div>
 
             {showAddForm && (
@@ -164,7 +281,7 @@ export default function AdminPage() {
                   <div className="form-group">
                     <label className="form-label">Category</label>
                     <select value={newProduct.category} onChange={e => setNewProduct(p => ({...p, category: e.target.value}))} className="form-select">
-                      {['Black Tea','Green Tea','White Tea','Oolong Tea','Herbal & Blends'].map(c => <option key={c}>{c}</option>)}
+                      {CATEGORIES.filter(c => c.id !== 'all').map(c => <option key={c.id} value={c.id}>{c.label}</option>)}
                     </select>
                   </div>
                   <div className="form-group">
@@ -172,12 +289,18 @@ export default function AdminPage() {
                     <input type="number" value={newProduct.stock} onChange={e => setNewProduct(p => ({...p, stock: e.target.value}))} placeholder="50" className="form-input" />
                   </div>
                   <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                    <label className="form-label">Product Image</label>
+                    <input type="file" accept="image/*" onChange={e => setImageFile(e.target.files?.[0] || null)} className="form-input" style={{ paddingTop: 8 }} />
+                  </div>
+                  <div className="form-group" style={{ gridColumn: '1 / -1' }}>
                     <label className="form-label">Description</label>
                     <input value={newProduct.description} onChange={e => setNewProduct(p => ({...p, description: e.target.value}))} placeholder="Short description..." className="form-input" />
                   </div>
                 </div>
                 <div style={{ display: 'flex', gap: 12, marginTop: 16 }}>
-                  <button onClick={handleAddProduct} className="btn btn-primary">Save Product</button>
+                  <button onClick={handleAddProduct} disabled={uploading} className="btn btn-primary">
+                    {uploading ? 'Processing...' : 'Save Product'}
+                  </button>
                   <button onClick={() => setShowAddForm(false)} className="btn btn-secondary">Cancel</button>
                 </div>
               </div>

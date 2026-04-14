@@ -37,8 +37,9 @@ export default function Navbar() {
           <Link href="/" className={styles.logo}>
             <Logo height={42} />
             <div className={styles.logoText}>
-              <span className={styles.logoMain}>Mukherjee</span>
+              <span className={styles.logoMain}>MUKHERJEE</span>
               <span className={styles.logoSub}>Tea Company</span>
+              <span className={styles.logoSub}>Since - 1971</span>
             </div>
           </Link>
 
@@ -95,8 +96,9 @@ export default function Navbar() {
           <div className={styles.mobileLogoRow}>
             <Logo height={32} />
             <div className={styles.logoText}>
-              <span className={styles.logoMain} style={{ fontSize: '0.95rem' }}>Mukherjee</span>
+              <span className={styles.logoMain} style={{ fontSize: '0.95rem' }}>MUKHERJEE</span>
               <span className={styles.logoSub} style={{ fontSize: '0.5rem', letterSpacing: '2px' }}>Tea Company</span>
+              <span className={styles.logoSub} style={{ fontSize: '0.5rem', letterSpacing: '2px' }}>Since - 1971</span>
             </div>
           </div>
           <div className={styles.divider} />

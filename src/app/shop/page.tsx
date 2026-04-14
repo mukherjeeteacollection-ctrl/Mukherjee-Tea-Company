@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
-import { PRODUCTS, CATEGORIES } from '@/lib/data';
+import React, { useState, useMemo, useEffect } from 'react';
+import { CATEGORIES } from '@/lib/data';
+import { Product, supabase } from '@/lib/supabase';
 import ProductCard from '@/components/ProductCard/ProductCard';
 import styles from './page.module.css';
 
@@ -11,8 +12,25 @@ export default function ShopPage() {
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 2000]);
   const [searchQuery, setSearchQuery] = useState('');
 
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function getProducts() {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .eq('is_active', true)
+        .order('created_at', { ascending: false });
+      
+      if (data) setProducts(data);
+      setLoading(false);
+    }
+    getProducts();
+  }, []);
+
   const filtered = useMemo(() => {
-    let result = [...PRODUCTS];
+    let result = [...products];
 
     if (activeCategory !== 'all') {
       result = result.filter(p => p.category === activeCategory);
@@ -37,7 +55,7 @@ export default function ShopPage() {
     }
 
     return result;
-  }, [activeCategory, sortBy, priceRange, searchQuery]);
+  }, [products, activeCategory, sortBy, priceRange, searchQuery]);
 
   return (
     <div className={styles.page}>
@@ -47,7 +65,7 @@ export default function ShopPage() {
           <p className={styles.eyebrow}>Our Collection</p>
           <h1 className={styles.title}>The Tea Shop</h1>
           <p className={styles.subtitle}>
-            Explore {PRODUCTS.length} exceptional teas, handcrafted from India's finest gardens.
+            Explore our collection of exceptional teas, handcrafted from India's finest gardens.
           </p>
         </div>
       </div>
@@ -99,7 +117,7 @@ export default function ShopPage() {
                   <span>{cat.icon}</span>
                   <span>{cat.label}</span>
                   <span className={styles.filterCount}>
-                    {cat.id === 'all' ? PRODUCTS.length : PRODUCTS.filter(p => p.category === cat.id).length}
+                    {cat.id === 'all' ? products.length : products.filter(p => p.category === cat.id).length}
                   </span>
                 </button>
               ))}

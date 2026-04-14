@@ -19,9 +19,10 @@ export default function ContactPage() {
   };
 
   const infoItems = [
-    { icon: '📧', title: 'Email Us', value: 'hello@mukherjeetea.com', sub: 'We reply within 24 hours' },
-    { icon: '📞', title: 'Call Us', value: '+91 98765 43210', sub: 'Mon–Sat, 9AM–6PM IST' },
-    { icon: '📍', title: 'Our Location', value: 'Kolkata, West Bengal', sub: 'India 700001' },
+    { icon: '📧', title: 'Email Us', value: 'teamukherjee@gmail.com', sub: 'Primary Contact' },
+    { icon: '📞', title: 'Call Us', value: '+91 80170 44113 / +91 7278334978', sub: 'Mon–Sat, 9AM–6PM IST' },
+    { icon: '📍', title: 'Our Location', value: 'Room No.30A, P36, &, India Exchange Pl Rd, 1st Floor, 30B, Kolkata, West Bengal 700001', sub: 'India 700001' },
+    { icon: '🗺️', title: 'Google Map', value: 'View on Google Maps', sub: 'Click to navigate', link: 'https://maps.app.goo.gl/aie5A1u8M3ZzWKJn7' },
   ];
 
   return (
@@ -46,23 +47,45 @@ export default function ContactPage() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
               <h2 style={{ fontFamily: 'Outfit', fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>Contact Information</h2>
               {infoItems.map(item => (
-                <div key={item.title} style={{
-                  padding: '24px',
-                  background: 'var(--glass-bg)',
-                  border: '1px solid var(--glass-border)',
-                  borderRadius: 'var(--radius-lg)',
-                  display: 'flex',
-                  gap: 18,
-                  alignItems: 'center',
-                  backdropFilter: 'var(--glass-blur)',
-                }}>
-                  <div style={{ fontSize: '1.8rem', flexShrink: 0 }}>{item.icon}</div>
-                  <div>
-                    <p style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--gold-primary)', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 }}>{item.title}</p>
-                    <p style={{ fontFamily: 'Outfit', fontWeight: 600, color: 'var(--text-primary)', fontSize: '0.95rem', marginBottom: 2 }}>{item.value}</p>
-                    <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>{item.sub}</p>
+                item.link ? (
+                  <a key={item.title} href={item.link} target="_blank" rel="noopener noreferrer" style={{
+                    padding: '24px',
+                    background: 'rgba(201, 168, 76, 0.1)',
+                    border: '1px solid rgba(201, 168, 76, 0.3)',
+                    borderRadius: 'var(--radius-lg)',
+                    display: 'flex',
+                    gap: 18,
+                    alignItems: 'center',
+                    backdropFilter: 'var(--glass-blur)',
+                    textDecoration: 'none',
+                    transition: 'all 0.3s ease',
+                  }} className="map-link-hover">
+                    <div style={{ fontSize: '1.8rem', flexShrink: 0 }}>{item.icon}</div>
+                    <div>
+                      <p style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--gold-primary)', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 }}>{item.title}</p>
+                      <p style={{ fontFamily: 'Outfit', fontWeight: 600, color: 'var(--gold-light)', fontSize: '0.95rem', marginBottom: 2 }}>{item.value}</p>
+                      <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>{item.sub}</p>
+                    </div>
+                  </a>
+                ) : (
+                  <div key={item.title} style={{
+                    padding: '24px',
+                    background: 'var(--glass-bg)',
+                    border: '1px solid var(--glass-border)',
+                    borderRadius: 'var(--radius-lg)',
+                    display: 'flex',
+                    gap: 18,
+                    alignItems: 'center',
+                    backdropFilter: 'var(--glass-blur)',
+                  }}>
+                    <div style={{ fontSize: '1.8rem', flexShrink: 0 }}>{item.icon}</div>
+                    <div>
+                      <p style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--gold-primary)', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 }}>{item.title}</p>
+                      <p style={{ fontFamily: 'Outfit', fontWeight: 600, color: 'var(--text-primary)', fontSize: '0.95rem', marginBottom: 2 }}>{item.value}</p>
+                      <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>{item.sub}</p>
+                    </div>
                   </div>
-                </div>
+                )
               ))}
 
               <div style={{
@@ -73,7 +96,7 @@ export default function ContactPage() {
               }}>
                 <p style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--gold-primary)', marginBottom: 8 }}>🎁 Wholesale & Corporate Orders</p>
                 <p style={{ fontSize: '0.83rem', color: 'var(--text-secondary)', lineHeight: 1.7 }}>
-                  Interested in stocking Mukherjee Teas or ordering in bulk for your office, restaurant, or hotel? We offer special wholesale pricing. Reach out and we'll craft a bespoke proposal.
+                  Interested in stocking MUKHERJEE TEAS or ordering in bulk for your office, restaurant, or hotel? We offer special wholesale pricing. Reach out and we'll craft a bespoke proposal.
                 </p>
               </div>
             </div>

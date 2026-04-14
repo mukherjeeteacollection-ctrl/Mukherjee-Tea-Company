@@ -14,9 +14,10 @@ export default function Footer() {
           <div className={styles.brand}>
             <div className={styles.logo}>
               <Logo height={54} />
-              <div>
-                <p className={styles.logoName}>Mukherjee Tea Company</p>
-                <p className={styles.logoTagline}>Est. with Passion</p>
+              <div className={styles.logoText}>
+                <p className={styles.logoMain}>MUKHERJEE</p>
+                <p className={styles.logoSub}>Tea Company</p>
+                <p className={styles.logoSub}>Since - 1971</p>
               </div>
             </div>
             <p className={styles.brandDesc}>
@@ -60,7 +61,7 @@ export default function Footer() {
 
           {/* Trust */}
           <div className={styles.col}>
-            <h4 className={styles.colTitle}>Why Mukherjee</h4>
+            <h4 className={styles.colTitle}>WHY MUKHERJEE</h4>
             <div className={styles.features}>
               {[
                 { icon: '🌿', text: '100% Organic Certified' },
@@ -82,7 +83,7 @@ export default function Footer() {
 
         <div className={styles.bottom}>
           <p className={styles.copy}>
-            © {currentYear} Mukherjee Tea Company. All rights reserved.
+            © {currentYear} MUKHERJEE TEA COMPANY. All rights reserved.
           </p>
           <div className={styles.bottomLinks}>
             <Link href="/privacy" className={styles.bottomLink}>Privacy Policy</Link>
