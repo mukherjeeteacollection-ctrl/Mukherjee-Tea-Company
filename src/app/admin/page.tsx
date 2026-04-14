@@ -87,7 +87,8 @@ export default function AdminPage() {
       showToast(`Successfully migrated ${result.count} products!`, 'success');
       fetchProducts();
     } else {
-      showToast('Migration failed. Ensure your SQL script was run and keys are correct.', 'error');
+      const msg = (result.error as any)?.message || 'Check connection and SQL setup.';
+      showToast(`Migration failed: ${msg}`, 'error');
     }
   };
 
