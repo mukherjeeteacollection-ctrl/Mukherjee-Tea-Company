@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { PRODUCTS, ADMIN_EMAIL, CATEGORIES } from '@/lib/data';
 import { Product, supabase } from '@/lib/supabase';
-import { seedProducts } from '@/lib/seed';
 import Logo from '@/components/Logo/Logo';
 import styles from './page.module.css';
 import { useToast } from '@/context/ToastContext';
@@ -12,12 +11,7 @@ import { useAuth } from '@/context/AuthContext';
 
 type Tab = 'products' | 'orders';
 
-const MOCK_ORDERS = [
-  { id: 'MTC001234', customer: 'Priya Sharma', email: 'priya@example.com', total: 1798, status: 'delivered', date: '2026-04-07', items: 2 },
-  { id: 'MTC001235', customer: 'Rahul Mehta', email: 'rahul@example.com', total: 899, status: 'shipped', date: '2026-04-08', items: 1 },
-  { id: 'MTC001236', customer: 'Ananya Kumar', email: 'ananya@example.com', total: 2547, status: 'confirmed', date: '2026-04-09', items: 3 },
-  { id: 'MTC001237', customer: 'Vikram Das', email: 'vikram@example.com', total: 599, status: 'pending', date: '2026-04-09', items: 1 },
-];
+const MOCK_ORDERS: any[] = [];
 
 const STATUS_COLORS: Record<string, string> = {
   pending: 'var(--badge-warning, #fde047)',
@@ -215,16 +209,9 @@ export default function AdminPage() {
           <div className={styles.panel}>
             <div className={styles.panelHeader}>
               <h2 className={styles.panelTitle}>Products</h2>
-              <div style={{ display: 'flex', gap: 12 }}>
-                {products.length === 0 && (
-                  <button onClick={handleMigrate} disabled={migrating} className="btn btn-secondary">
-                    {migrating ? 'Migrating...' : '🚀 Migrate Local Data'}
-                  </button>
-                )}
-                <button onClick={() => setShowAddForm(!showAddForm)} className="btn btn-primary" id="admin-add-product-btn">
-                  + Add Product
-                </button>
-              </div>
+              <button className="btn btn-secondary" onClick={() => setShowAddForm(true)} id="add-product-btn">
+                + Add Product
+              </button>
             </div>
 
             {showAddForm && (

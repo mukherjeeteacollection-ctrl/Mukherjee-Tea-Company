@@ -6,7 +6,25 @@ import ProductCard from '@/components/ProductCard/ProductCard';
 import styles from './page.module.css';
 
 export default function HomePage() {
-  const featuredProducts = PRODUCTS.filter(p => p.is_featured);
+  const [featuredProducts, setFeaturedProducts] = React.useState<any[]>([]);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    async function getFeatured() {
+      const { createClient } = await import('@/utils/supabase/client');
+      const supabase = createClient();
+      const { data } = await supabase
+        .from('products')
+        .select('*')
+        .eq('is_active', true)
+        .eq('is_featured', true)
+        .limit(4);
+      
+      if (data) setFeaturedProducts(data);
+      setLoading(false);
+    }
+    getFeatured();
+  }, []);
 
   return (
     <>
