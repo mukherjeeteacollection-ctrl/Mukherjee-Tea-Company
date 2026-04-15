@@ -158,16 +158,6 @@ export default function BannerCarousel() {
       {/* ── Persistent Hero Overlay (always visible on top of slides) ── */}
       <div className={styles.heroOverlay}>
         <div className={styles.heroContent}>
-          <div className={styles.heroActions}>
-            <Link href="/shop" className="btn btn-primary btn-xl" id="hero-shop-btn">
-              Explore Our Teas
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </Link>
-            <Link href="/about" className="btn btn-secondary btn-xl">
-              Our Story
-            </Link>
-          </div>
-
           <div className={styles.heroStats}>
             {[
               { value: '8+', label: 'Unique Varieties' },

@@ -115,18 +115,11 @@
   width: 100%;
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0 24px 32px;
+  padding: 0 24px 24px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
   pointer-events: auto;
-}
-
-.heroActions {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  animation: fadeUp 0.7s 0.3s ease both;
 }
 
 .heroStats {
@@ -162,8 +155,15 @@
 }
 
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(24px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ============================================================
@@ -201,8 +201,13 @@
   transform: translateY(-50%) scale(1.08);
 }
 
-.arrowPrev { left: 16px; }
-.arrowNext { right: 16px; }
+.arrowPrev {
+  left: 16px;
+}
+
+.arrowNext {
+  right: 16px;
+}
 
 /* ============================================================
    DOT INDICATORS
@@ -266,19 +271,22 @@
 .skeleton {
   width: 100%;
   aspect-ratio: 1793 / 576;
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0.03) 25%,
-    rgba(255, 255, 255, 0.07) 50%,
-    rgba(255, 255, 255, 0.03) 75%
-  );
+  background: linear-gradient(90deg,
+      rgba(255, 255, 255, 0.03) 25%,
+      rgba(255, 255, 255, 0.07) 50%,
+      rgba(255, 255, 255, 0.03) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
 
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 /* ============================================================
@@ -287,26 +295,26 @@
    ============================================================ */
 @media (max-width: 1024px) {
   .carouselTrack {
-    aspect-ratio: 2 / 1;
+    aspect-ratio: 2.5 / 1;
   }
 
   .skeleton {
-    aspect-ratio: 2 / 1;
+    aspect-ratio: 2.5 / 1;
   }
 
   .slideContent {
-    padding: 0 40px;
-    max-width: 520px;
+    padding: 0 32px;
+    max-width: 480px;
   }
 
   .heroContent {
-    padding: 0 24px 28px;
-    gap: 16px;
+    padding: 0 24px 20px;
+    gap: 12px;
   }
 
   .heroStats {
-    gap: 20px;
-    padding-top: 14px;
+    gap: 16px;
+    padding-top: 12px;
   }
 
   .heroStatValue {
@@ -325,104 +333,75 @@
    ============================================================ */
 @media (max-width: 768px) {
   .carouselTrack {
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 2 / 1;
   }
 
   .skeleton {
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 2 / 1;
   }
 
-  /* Overlay: darker at bottom for buttons readability */
+  /* Overlay: darker at bottom for text readability */
   .slideOverlay {
     background:
-      linear-gradient(to bottom, rgba(5, 13, 10, 0.3) 0%, rgba(5, 13, 10, 0.15) 30%, rgba(5, 13, 10, 0.5) 60%, rgba(5, 13, 10, 0.95) 85%);
+      linear-gradient(to bottom, rgba(5, 13, 10, 0.2) 0%, rgba(5, 13, 10, 0.1) 30%, rgba(5, 13, 10, 0.4) 60%, rgba(5, 13, 10, 0.85) 90%);
   }
 
-  /* Slide text: upper area */
+  /* Slide text area */
   .slideContent {
-    top: 20px;
-    transform: none;
+    top: 50%;
+    transform: translateY(-50%);
     padding: 0 16px;
     max-width: 100%;
-    gap: 8px;
+    gap: 6px;
   }
 
   .slideTitle {
-    font-size: 1.15rem;
-    text-shadow: 0 1px 10px rgba(0, 0, 0, 0.8);
-  }
-
-  .slideSubtitle {
-    font-size: 0.75rem;
-    line-height: 1.4;
-    max-width: 280px;
+    font-size: 1rem;
     text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8);
   }
 
-  .slideLink {
-    padding: 8px 18px;
-    font-size: 0.75rem;
+  .slideSubtitle {
+    font-size: 0.7rem;
+    line-height: 1.3;
+    max-width: 240px;
   }
 
-  /* Hero overlay: bottom area */
+  /* Hero overlay area */
   .heroContent {
-    padding: 0 16px 18px;
-    gap: 12px;
-  }
-
-  /* Stack buttons vertically */
-  .heroActions {
-    flex-direction: column;
+    padding: 0 16px 14px;
     gap: 8px;
-    width: 100%;
   }
 
-  .heroActions :global(.btn-xl) {
-    padding: 12px 20px;
-    font-size: 0.85rem;
-    width: 100%;
-    justify-content: center;
-    text-align: center;
-  }
-
-  /* Stats: 2×2 grid */
+  /* Stats: horizontal or compact grid */
   .heroStats {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    padding-top: 12px;
+    display: flex;
+    gap: 14px;
+    padding-top: 10px;
   }
 
   .heroStatValue {
-    font-size: 1.05rem;
+    font-size: 0.95rem;
   }
 
   .heroStatLabel {
-    font-size: 0.58rem;
-    letter-spacing: 0.3px;
+    font-size: 0.55rem;
   }
 
-  /* Arrows */
+  /* Arrows: more balanced */
   .arrowBtn {
     width: 32px;
     height: 32px;
     opacity: 0.8;
-    top: 30%;
   }
 
-  .carousel:hover .arrowBtn {
-    opacity: 1;
-  }
+  .arrowPrev { left: 8px; }
+  .arrowNext { right: 8px; }
 
-  .arrowPrev { left: 6px; }
-  .arrowNext { right: 6px; }
-
-  /* Dots */
+  /* Dots: bottom of slide area */
   .dots {
-    bottom: auto;
-    top: 52%;
-    gap: 6px;
-    padding: 4px 10px;
+    bottom: 10px;
+    gap: 5px;
+    padding: 3px 8px;
   }
 
   .dot {
@@ -433,72 +412,50 @@
 
 /* ============================================================
    RESPONSIVE — SMALL PHONE (max 480px)
-   Aspect ratio: 3:4 (fully portrait, image fills beautifully)
+   Aspect ratio: 1.5:1 (landscape — prevents zooming on small phones)
    ============================================================ */
 @media (max-width: 480px) {
   .carouselTrack {
-    aspect-ratio: 3 / 4;
+    aspect-ratio: 1.5 / 1;
   }
 
   .skeleton {
-    aspect-ratio: 3 / 4;
-  }
-
-  .slideContent {
-    top: 16px;
-    padding: 0 14px;
-    gap: 6px;
+    aspect-ratio: 1.5 / 1;
   }
 
   .slideTitle {
-    font-size: 1rem;
+    font-size: 0.85rem;
   }
 
   .slideSubtitle {
-    font-size: 0.7rem;
-    max-width: 240px;
-  }
-
-  .slideLink {
-    padding: 7px 16px;
-    font-size: 0.7rem;
+    font-size: 0.65rem;
+    max-width: 180px;
   }
 
   .heroContent {
-    padding: 0 14px 16px;
-    gap: 10px;
-  }
-
-  .heroActions :global(.btn-xl) {
-    padding: 10px 16px;
-    font-size: 0.8rem;
+    padding: 0 12px 10px;
+    gap: 6px;
   }
 
   .heroStats {
-    gap: 6px;
-    padding-top: 10px;
+    gap: 8px;
+    padding-top: 8px;
   }
 
   .heroStatValue {
-    font-size: 0.95rem;
+    font-size: 0.85rem;
   }
 
   .heroStatLabel {
-    font-size: 0.52rem;
+    font-size: 0.48rem;
   }
 
   .arrowBtn {
     width: 28px;
     height: 28px;
-    top: 20%;
   }
 
   .dots {
-    top: 40%;
-  }
-
-  .dot {
-    width: 6px;
-    height: 6px;
+    bottom: 8px;
   }
 }
