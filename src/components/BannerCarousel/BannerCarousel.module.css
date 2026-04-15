@@ -96,6 +96,68 @@
   box-shadow: 0 8px 30px rgba(201, 168, 76, 0.55);
   transform: translateY(-2px);
 }
+/* ============================================================
+   HERO OVERLAY (persistent buttons + stats on top of slides)
+   ============================================================ */
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  display: flex;
+  align-items: flex-end;
+}
+
+.heroContent {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  pointer-events: auto;
+}
+
+.heroActions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  animation: fadeUp 0.7s 0.3s ease both;
+}
+
+.heroStats {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+  padding-top: 28px;
+  border-top: 1px solid var(--glass-border);
+  animation: fadeUp 0.7s 0.45s ease both;
+}
+
+.heroStat { display: flex; flex-direction: column; gap: 2px; }
+
+.heroStatValue {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--gold-light), var(--gold-primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.heroStatLabel {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(32px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
 /* ============================================================
    NAVIGATION ARROWS
@@ -275,6 +337,19 @@
     width: 8px;
     height: 8px;
   }
+
+  .heroContent {
+    padding: 0 16px 60px;
+    gap: 20px;
+  }
+
+  .heroStats {
+    gap: 20px;
+  }
+
+  .heroStatValue {
+    font-size: 1.3rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -299,5 +374,23 @@
   .slideLink {
     padding: 10px 24px;
     font-size: 0.8rem;
+  }
+
+  .heroContent {
+    padding: 0 16px 48px;
+    gap: 16px;
+  }
+
+  .heroStats {
+    gap: 16px;
+    padding-top: 16px;
+  }
+
+  .heroStatValue {
+    font-size: 1.1rem;
+  }
+
+  .heroStatLabel {
+    font-size: 0.65rem;
   }
 }

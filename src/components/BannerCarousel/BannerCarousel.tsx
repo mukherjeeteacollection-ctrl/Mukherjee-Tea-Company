@@ -155,6 +155,35 @@ export default function BannerCarousel() {
         ))}
       </div>
 
+      {/* ── Persistent Hero Overlay (always visible on top of slides) ── */}
+      <div className={styles.heroOverlay}>
+        <div className={styles.heroContent}>
+          <div className={styles.heroActions}>
+            <Link href="/shop" className="btn btn-primary btn-xl" id="hero-shop-btn">
+              Explore Our Teas
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </Link>
+            <Link href="/about" className="btn btn-secondary btn-xl">
+              Our Story
+            </Link>
+          </div>
+
+          <div className={styles.heroStats}>
+            {[
+              { value: '8+', label: 'Unique Varieties' },
+              { value: '100%', label: 'Organic Certified' },
+              { value: '3rd', label: 'Generation Expertise' },
+              { value: '₹999+', label: 'Free Shipping' },
+            ].map(stat => (
+              <div key={stat.label} className={styles.heroStat}>
+                <span className={styles.heroStatValue}>{stat.value}</span>
+                <span className={styles.heroStatLabel}>{stat.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* ── Arrows ── */}
       {showControls && (
         <>
