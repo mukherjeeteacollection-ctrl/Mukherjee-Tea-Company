@@ -489,25 +489,143 @@
 }
 
 /* ============================================================
-   RESPONSIVE
+   RESPONSIVE — TABLET (max 1024px)
    ============================================================ */
 @media (max-width: 1024px) {
   .storyGrid { gap: 48px; }
   .processGrid { grid-template-columns: repeat(2, 1fr); }
   .testimonialGrid { grid-template-columns: repeat(2, 1fr); }
   .testimonialCard:last-child { grid-column: 1 / -1; max-width: 480px; margin: 0 auto; }
+
+  .sectionHeader { margin-bottom: 36px; }
+  .storyBanner { padding: 80px 0; }
+  .ctaBanner { padding: 80px 0; }
 }
 
+/* ============================================================
+   RESPONSIVE — MOBILE (max 768px)
+   ============================================================ */
 @media (max-width: 768px) {
-  .heroContent { padding-top: 20px; padding-bottom: 60px; }
-  .heroStats { gap: 20px; }
-  .heroStatValue { font-size: 1.3rem; }
-  .categoryScroll { justify-content: flex-start; flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; }
-  .storyGrid { grid-template-columns: 1fr; }
-  .storyBadge { bottom: -16px; right: 16px; }
-  .storyImageInner { height: 320px; }
-  .processGrid { grid-template-columns: 1fr; }
-  .testimonialGrid { grid-template-columns: 1fr; }
+  /* Category strip: horizontal scroll on mobile */
+  .categoryStrip { padding: 20px 0; }
+  .categoryScroll {
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .categoryScroll::-webkit-scrollbar { display: none; }
+  .categoryChip {
+    padding: 8px 16px;
+    font-size: 0.78rem;
+    flex-shrink: 0;
+  }
+  .categoryEmoji { font-size: 0.95rem; }
+
+  /* Section headers: stack vertically */
+  .sectionHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 28px;
+    gap: 12px;
+  }
+  .sectionEyebrow {
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    margin-bottom: 4px;
+  }
+  .sectionTitle { font-size: clamp(1.4rem, 5vw, 1.8rem); }
+
+  /* Story banner */
+  .storyBanner { padding: 48px 0; }
+  .storyGrid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .storyImageInner { height: 240px; }
+  .storyBadge {
+    bottom: -12px;
+    right: 12px;
+    padding: 14px 16px;
+  }
+  .storyBadgeNum { font-size: 1.5rem; }
+  .storyBadgeText { font-size: 0.6rem; }
+  .storyText { font-size: 0.85rem; line-height: 1.7; }
+  .storyFeatures { grid-template-columns: 1fr; gap: 8px; }
+  .storyFeature {
+    padding: 10px 12px;
+    font-size: 0.78rem;
+  }
+  .goldLine { margin: 14px 0; }
+
+  /* Process grid */
+  .processGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .processCard { padding: 20px 18px; gap: 10px; }
+  .processIcon { font-size: 1.5rem; }
+  .processTitle { font-size: 0.92rem; }
+  .processDesc { font-size: 0.78rem; }
+
+  /* Testimonials */
+  .testimonialGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .testimonialCard {
+    padding: 24px 20px;
+    gap: 12px;
+  }
   .testimonialCard:last-child { grid-column: auto; max-width: none; }
-  .storyFeatures { grid-template-columns: 1fr; }
+  .testimonialText { font-size: 0.95rem; }
+  .testimonialName { font-size: 0.82rem; }
+  .testimonialAvatar { width: 34px; height: 34px; font-size: 0.85rem; }
+
+  /* CTA */
+  .ctaBanner { padding: 48px 0; }
+  .ctaTitle { font-size: clamp(1.4rem, 5vw, 2rem); }
+  .ctaSubtitle { font-size: 0.88rem; }
+  .ctaContent { gap: 16px; }
+  .ctaContent :global(.btn-xl) {
+    padding: 14px 32px;
+    font-size: 0.92rem;
+  }
 }
+
+/* ============================================================
+   RESPONSIVE — SMALL PHONE (max 480px)
+   ============================================================ */
+@media (max-width: 480px) {
+  .categoryChip { padding: 7px 12px; font-size: 0.72rem; }
+
+  .sectionTitle { font-size: 1.3rem; }
+  .sectionEyebrow { font-size: 0.6rem; letter-spacing: 1.5px; }
+
+  .storyBanner { padding: 36px 0; }
+  .storyImageInner { height: 200px; }
+  .storyGrid { gap: 24px; }
+  .storyText { font-size: 0.8rem; }
+  .storyFeature { padding: 8px 10px; font-size: 0.72rem; }
+
+  .processCard { padding: 16px 14px; }
+  .processStep { font-size: 0.6rem; }
+  .processIcon { font-size: 1.3rem; }
+  .processTitle { font-size: 0.85rem; }
+  .processDesc { font-size: 0.75rem; }
+
+  .testimonialCard { padding: 20px 16px; }
+  .testimonialText { font-size: 0.88rem; }
+  .testimonialStars { font-size: 0.85rem; }
+
+  .ctaBanner { padding: 36px 0; }
+  .ctaTitle { font-size: 1.2rem; }
+  .ctaSubtitle { font-size: 0.82rem; }
+  .ctaContent :global(.btn-xl) {
+    padding: 12px 24px;
+    font-size: 0.85rem;
+  }
+}
+

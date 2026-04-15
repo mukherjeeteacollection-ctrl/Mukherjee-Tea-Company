@@ -1,5 +1,5 @@
 /* ============================================================
-   BANNER CAROUSEL
+   BANNER CAROUSEL — 1793 × 576 aspect ratio (3.11:1)
    ============================================================ */
 .carousel {
   position: relative;
@@ -12,8 +12,8 @@
   display: flex;
   transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1);
   will-change: transform;
-  height: calc(100vh - var(--nav-height));
-  min-height: 480px;
+  /* Maintain 1793:576 aspect ratio = 32.12% */
+  aspect-ratio: 1793 / 576;
 }
 
 .slide {
@@ -24,7 +24,7 @@
   overflow: hidden;
 }
 
-/* Image always covers full width/height regardless of source dimensions */
+/* Image always covers full area regardless of source dimensions */
 .slideImage {
   object-fit: cover;
   object-position: center;
@@ -35,41 +35,41 @@
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(to right, rgba(5, 13, 10, 0.88) 0%, rgba(5, 13, 10, 0.55) 50%, rgba(5, 13, 10, 0.2) 100%),
-    linear-gradient(to top, rgba(5, 13, 10, 0.85) 0%, rgba(5, 13, 10, 0.1) 40%, transparent 70%);
+    linear-gradient(to right, rgba(5, 13, 10, 0.88) 0%, rgba(5, 13, 10, 0.5) 50%, rgba(5, 13, 10, 0.15) 100%),
+    linear-gradient(to top, rgba(5, 13, 10, 0.9) 0%, rgba(5, 13, 10, 0.2) 50%, transparent 80%);
   z-index: 1;
   pointer-events: none;
 }
 
-/* Text content on slide — vertically centered */
+/* Slide-specific text content — positioned in upper-left area */
 .slideContent {
   position: absolute;
-  top: 40%;
+  top: 50%;
   left: 0;
   transform: translateY(-50%);
   z-index: 2;
   padding: 0 64px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  max-width: 720px;
+  gap: 12px;
+  max-width: 640px;
 }
 
 .slideTitle {
   font-family: 'Outfit', sans-serif;
-  font-size: clamp(1.6rem, 4vw, 3.5rem);
+  font-size: clamp(1.4rem, 3vw, 2.8rem);
   font-weight: 900;
   color: var(--text-primary);
-  line-height: 1.08;
+  line-height: 1.1;
   letter-spacing: -0.03em;
   text-shadow: 0 2px 16px rgba(0, 0, 0, 0.6);
 }
 
 .slideSubtitle {
-  font-size: clamp(0.85rem, 1.2vw, 1.1rem);
+  font-size: clamp(0.78rem, 1vw, 1rem);
   color: var(--text-secondary);
-  line-height: 1.7;
-  max-width: 520px;
+  line-height: 1.6;
+  max-width: 440px;
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.4);
 }
 
@@ -77,14 +77,14 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin-top: 8px;
-  padding: 12px 32px;
+  margin-top: 4px;
+  padding: 10px 28px;
   background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
   color: var(--dark-bg);
   border-radius: var(--radius-full);
   font-family: 'Outfit', sans-serif;
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   letter-spacing: 0.5px;
   text-decoration: none;
   width: fit-content;
@@ -113,10 +113,10 @@
   width: 100%;
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0 24px 80px;
+  padding: 0 24px 32px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
   pointer-events: auto;
 }
 
@@ -129,9 +129,9 @@
 
 .heroStats {
   display: flex;
-  gap: 24px;
+  gap: 28px;
   flex-wrap: wrap;
-  padding-top: 20px;
+  padding-top: 16px;
   border-top: 1px solid var(--glass-border);
   animation: fadeUp 0.7s 0.45s ease both;
 }
@@ -144,7 +144,7 @@
 
 .heroStatValue {
   font-family: 'Outfit', sans-serif;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   font-weight: 800;
   background: linear-gradient(135deg, var(--gold-light), var(--gold-primary));
   -webkit-background-clip: text;
@@ -153,14 +153,14 @@
 }
 
 .heroStatLabel {
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(32px); }
+  from { opacity: 0; transform: translateY(24px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -169,11 +169,11 @@
    ============================================================ */
 .arrowBtn {
   position: absolute;
-  top: 40%;
+  top: 50%;
   transform: translateY(-50%);
   z-index: 3;
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   background: rgba(10, 26, 18, 0.55);
   backdrop-filter: blur(12px);
@@ -199,28 +199,23 @@
   transform: translateY(-50%) scale(1.08);
 }
 
-.arrowPrev {
-  left: 20px;
-}
-
-.arrowNext {
-  right: 20px;
-}
+.arrowPrev { left: 16px; }
+.arrowNext { right: 16px; }
 
 /* ============================================================
    DOT INDICATORS
    ============================================================ */
 .dots {
   position: absolute;
-  bottom: 20px;
+  bottom: 14px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 3;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 16px;
-  background: rgba(10, 26, 18, 0.45);
+  gap: 8px;
+  padding: 6px 14px;
+  background: rgba(10, 26, 18, 0.5);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -228,8 +223,8 @@
 }
 
 .dot {
-  width: 10px;
-  height: 10px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
   background: rgba(240, 234, 214, 0.3);
   border: none;
@@ -250,7 +245,7 @@
 }
 
 /* ============================================================
-   PROGRESS BAR (auto-advance indicator)
+   PROGRESS BAR
    ============================================================ */
 .progressBar {
   position: absolute;
@@ -268,8 +263,7 @@
    ============================================================ */
 .skeleton {
   width: 100%;
-  height: calc(100vh - var(--nav-height));
-  min-height: 480px;
+  aspect-ratio: 1793 / 576;
   background: linear-gradient(
     90deg,
     rgba(255, 255, 255, 0.03) 25%,
@@ -291,112 +285,139 @@
 @media (max-width: 1024px) {
   .slideContent {
     padding: 0 40px;
+    max-width: 520px;
   }
 
   .heroContent {
-    padding: 0 24px 70px;
+    padding: 0 24px 28px;
+    gap: 16px;
+  }
+
+  .heroStats {
+    gap: 20px;
+    padding-top: 14px;
+  }
+
+  .heroStatValue {
+    font-size: 1.25rem;
+  }
+
+  .arrowBtn {
+    width: 40px;
+    height: 40px;
   }
 }
 
 /* ============================================================
    RESPONSIVE — MOBILE (max 768px)
+   On mobile the aspect ratio makes the banner quite short,
+   so we switch to a taller fixed height to show content well.
    ============================================================ */
 @media (max-width: 768px) {
   .carouselTrack {
-    min-height: 520px;
+    aspect-ratio: auto;
+    height: 420px;
   }
 
   .skeleton {
-    min-height: 520px;
+    aspect-ratio: auto;
+    height: 420px;
   }
 
-  /* Slide text: push further up so it doesn't clash with hero buttons */
+  /* Slide text: top area */
   .slideContent {
-    top: 25%;
-    padding: 0 20px;
+    top: 24px;
+    transform: none;
+    padding: 0 16px;
     max-width: 100%;
-    gap: 10px;
+    gap: 8px;
   }
 
   .slideTitle {
-    font-size: 1.4rem;
+    font-size: 1.15rem;
   }
 
   .slideSubtitle {
-    font-size: 0.82rem;
-    line-height: 1.5;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    max-width: 280px;
   }
 
   .slideLink {
-    padding: 10px 22px;
-    font-size: 0.8rem;
+    padding: 8px 18px;
+    font-size: 0.75rem;
   }
 
-  /* Hero overlay: move dots above the hero content */
-  .heroOverlay {
-    align-items: flex-end;
-  }
-
+  /* Hero overlay: bottom of banner */
   .heroContent {
-    padding: 0 16px 56px;
-    gap: 16px;
+    padding: 0 16px 20px;
+    gap: 12px;
   }
 
-  /* Stack buttons vertically on mobile */
+  /* Stack buttons vertically, full width */
   .heroActions {
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
     width: 100%;
   }
 
   .heroActions :global(.btn-xl) {
-    padding: 14px 28px;
-    font-size: 0.92rem;
+    padding: 12px 20px;
+    font-size: 0.85rem;
     width: 100%;
     justify-content: center;
+    text-align: center;
   }
 
+  /* Stats: 2×2 grid */
   .heroStats {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    padding-top: 16px;
+    gap: 8px;
+    padding-top: 12px;
   }
 
   .heroStatValue {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
   }
 
   .heroStatLabel {
-    font-size: 0.62rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.3px;
   }
 
-  /* Arrows: always visible but small */
+  /* Arrows: smaller, always visible */
   .arrowBtn {
-    width: 36px;
-    height: 36px;
-    opacity: 0.8;
-    top: 25%;
+    width: 32px;
+    height: 32px;
+    opacity: 0.75;
+    top: 60px;
   }
 
   .carousel:hover .arrowBtn {
     opacity: 1;
   }
 
-  .arrowPrev { left: 8px; }
-  .arrowNext { right: 8px; }
+  .arrowPrev { left: 6px; }
+  .arrowNext { right: 6px; }
 
-  /* Dots: position above the hero overlay content */
+  /* Dots: above buttons area */
   .dots {
     bottom: auto;
-    top: 50%;
-    gap: 8px;
-    padding: 6px 12px;
+    top: 115px;
+    gap: 6px;
+    padding: 4px 10px;
   }
 
   .dot {
-    width: 8px;
-    height: 8px;
+    width: 7px;
+    height: 7px;
+  }
+
+  .slideOverlay {
+    background:
+      linear-gradient(to bottom, rgba(5, 13, 10, 0.7) 0%, rgba(5, 13, 10, 0.3) 30%, transparent 50%),
+      linear-gradient(to top, rgba(5, 13, 10, 0.95) 0%, rgba(5, 13, 10, 0.6) 40%, transparent 65%);
   }
 }
 
@@ -405,64 +426,68 @@
    ============================================================ */
 @media (max-width: 480px) {
   .carouselTrack {
-    min-height: 480px;
+    height: 380px;
   }
 
   .skeleton {
-    min-height: 480px;
+    height: 380px;
   }
 
   .slideContent {
-    top: 18%;
-    padding: 0 16px;
-    gap: 8px;
-  }
-
-  .slideTitle {
-    font-size: 1.2rem;
-  }
-
-  .slideSubtitle {
-    font-size: 0.78rem;
-  }
-
-  .heroContent {
-    padding: 0 16px 40px;
-    gap: 12px;
-  }
-
-  .heroActions :global(.btn-xl) {
-    padding: 12px 20px;
-    font-size: 0.85rem;
-  }
-
-  .heroStats {
-    gap: 8px;
-    padding-top: 12px;
-  }
-
-  .heroStatValue {
-    font-size: 1rem;
-  }
-
-  .heroStatLabel {
-    font-size: 0.58rem;
-    letter-spacing: 0.3px;
-  }
-
-  .arrowBtn {
-    width: 32px;
-    height: 32px;
-  }
-
-  .dots {
-    top: 42%;
-    padding: 5px 10px;
+    top: 16px;
+    padding: 0 14px;
     gap: 6px;
   }
 
+  .slideTitle {
+    font-size: 1rem;
+  }
+
+  .slideSubtitle {
+    font-size: 0.7rem;
+    max-width: 240px;
+  }
+
+  .slideLink {
+    padding: 7px 16px;
+    font-size: 0.7rem;
+  }
+
+  .heroContent {
+    padding: 0 14px 16px;
+    gap: 10px;
+  }
+
+  .heroActions :global(.btn-xl) {
+    padding: 10px 16px;
+    font-size: 0.8rem;
+  }
+
+  .heroStats {
+    gap: 6px;
+    padding-top: 10px;
+  }
+
+  .heroStatValue {
+    font-size: 0.95rem;
+  }
+
+  .heroStatLabel {
+    font-size: 0.55rem;
+  }
+
+  .arrowBtn {
+    width: 28px;
+    height: 28px;
+    top: 50px;
+  }
+
+  .dots {
+    top: 100px;
+  }
+
   .dot {
-    width: 7px;
-    height: 7px;
+    width: 6px;
+    height: 6px;
   }
 }

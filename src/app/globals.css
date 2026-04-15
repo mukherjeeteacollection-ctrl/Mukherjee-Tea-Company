@@ -715,7 +715,11 @@ h6 {
   }
 
   .section {
-    padding: 64px 0;
+    padding: 48px 0;
+  }
+
+  .section-sm {
+    padding: 36px 0;
   }
 
   .grid-4,
@@ -726,16 +730,54 @@ h6 {
 
   .grid-auto {
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
   }
 
   h1 {
-    font-size: clamp(2rem, 8vw, 3rem) !important;
+    font-size: clamp(1.8rem, 7vw, 2.8rem) !important;
+  }
+
+  .btn-xl {
+    padding: 14px 28px;
+    font-size: 0.92rem;
+  }
+
+  .btn-lg {
+    padding: 12px 28px;
+    font-size: 0.9rem;
   }
 }
 
 @media (max-width: 480px) {
+  .container {
+    padding: 0 14px;
+  }
+
+  .section {
+    padding: 36px 0;
+  }
+
+  .section-sm {
+    padding: 28px 0;
+  }
+
   .btn-xl {
-    padding: 16px 32px;
-    font-size: 0.95rem;
+    padding: 12px 24px;
+    font-size: 0.85rem;
+  }
+
+  .btn-lg {
+    padding: 10px 22px;
+    font-size: 0.85rem;
+  }
+
+  .btn {
+    font-size: 0.82rem;
+    padding: 10px 20px;
+  }
+
+  .btn-sm {
+    padding: 6px 14px;
+    font-size: 0.75rem;
   }
 }
