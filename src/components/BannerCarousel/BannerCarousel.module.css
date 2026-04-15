@@ -41,14 +41,14 @@
   pointer-events: none;
 }
 
-/* Text content on slide — vertically centered like the old hero */
+/* Text content on slide — vertically centered */
 .slideContent {
   position: absolute;
-  top: 50%;
+  top: 40%;
   left: 0;
   transform: translateY(-50%);
   z-index: 2;
-  padding: 40px 64px;
+  padding: 0 64px;
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -57,7 +57,7 @@
 
 .slideTitle {
   font-family: 'Outfit', sans-serif;
-  font-size: clamp(2.2rem, 5vw, 4.2rem);
+  font-size: clamp(1.6rem, 4vw, 3.5rem);
   font-weight: 900;
   color: var(--text-primary);
   line-height: 1.08;
@@ -66,7 +66,7 @@
 }
 
 .slideSubtitle {
-  font-size: clamp(0.95rem, 1.3vw, 1.15rem);
+  font-size: clamp(0.85rem, 1.2vw, 1.1rem);
   color: var(--text-secondary);
   line-height: 1.7;
   max-width: 520px;
@@ -96,6 +96,7 @@
   box-shadow: 0 8px 30px rgba(201, 168, 76, 0.55);
   transform: translateY(-2px);
 }
+
 /* ============================================================
    HERO OVERLAY (persistent buttons + stats on top of slides)
    ============================================================ */
@@ -115,31 +116,35 @@
   padding: 0 24px 80px;
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 24px;
   pointer-events: auto;
 }
 
 .heroActions {
   display: flex;
-  gap: 16px;
+  gap: 12px;
   flex-wrap: wrap;
   animation: fadeUp 0.7s 0.3s ease both;
 }
 
 .heroStats {
   display: flex;
-  gap: 32px;
+  gap: 24px;
   flex-wrap: wrap;
-  padding-top: 28px;
+  padding-top: 20px;
   border-top: 1px solid var(--glass-border);
   animation: fadeUp 0.7s 0.45s ease both;
 }
 
-.heroStat { display: flex; flex-direction: column; gap: 2px; }
+.heroStat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
 
 .heroStatValue {
   font-family: 'Outfit', sans-serif;
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   font-weight: 800;
   background: linear-gradient(135deg, var(--gold-light), var(--gold-primary));
   -webkit-background-clip: text;
@@ -148,7 +153,7 @@
 }
 
 .heroStatLabel {
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -164,7 +169,7 @@
    ============================================================ */
 .arrowBtn {
   position: absolute;
-  top: 50%;
+  top: 40%;
   transform: translateY(-50%);
   z-index: 3;
   width: 48px;
@@ -281,54 +286,110 @@
 }
 
 /* ============================================================
-   RESPONSIVE
+   RESPONSIVE — TABLET (max 1024px)
    ============================================================ */
 @media (max-width: 1024px) {
-  .carouselTrack {
-    height: calc(100vh - var(--nav-height));
-    min-height: 400px;
-  }
-
-  .skeleton {
-    height: calc(100vh - var(--nav-height));
-    min-height: 400px;
-  }
-
   .slideContent {
-    padding: 36px 40px;
+    padding: 0 40px;
+  }
+
+  .heroContent {
+    padding: 0 24px 70px;
   }
 }
 
+/* ============================================================
+   RESPONSIVE — MOBILE (max 768px)
+   ============================================================ */
 @media (max-width: 768px) {
   .carouselTrack {
-    height: calc(100vh - var(--nav-height));
-    min-height: 360px;
+    min-height: 520px;
   }
 
   .skeleton {
-    height: calc(100vh - var(--nav-height));
-    min-height: 360px;
+    min-height: 520px;
   }
 
+  /* Slide text: push further up so it doesn't clash with hero buttons */
   .slideContent {
-    padding: 24px 20px;
+    top: 25%;
+    padding: 0 20px;
+    max-width: 100%;
+    gap: 10px;
   }
 
+  .slideTitle {
+    font-size: 1.4rem;
+  }
+
+  .slideSubtitle {
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+
+  .slideLink {
+    padding: 10px 22px;
+    font-size: 0.8rem;
+  }
+
+  /* Hero overlay: move dots above the hero content */
+  .heroOverlay {
+    align-items: flex-end;
+  }
+
+  .heroContent {
+    padding: 0 16px 56px;
+    gap: 16px;
+  }
+
+  /* Stack buttons vertically on mobile */
+  .heroActions {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .heroActions :global(.btn-xl) {
+    padding: 14px 28px;
+    font-size: 0.92rem;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .heroStats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding-top: 16px;
+  }
+
+  .heroStatValue {
+    font-size: 1.2rem;
+  }
+
+  .heroStatLabel {
+    font-size: 0.62rem;
+  }
+
+  /* Arrows: always visible but small */
   .arrowBtn {
-    width: 38px;
-    height: 38px;
-    opacity: 0.7;
+    width: 36px;
+    height: 36px;
+    opacity: 0.8;
+    top: 25%;
   }
 
   .carousel:hover .arrowBtn {
     opacity: 1;
   }
 
-  .arrowPrev { left: 10px; }
-  .arrowNext { right: 10px; }
+  .arrowPrev { left: 8px; }
+  .arrowNext { right: 8px; }
 
+  /* Dots: position above the hero overlay content */
   .dots {
-    bottom: 12px;
+    bottom: auto;
+    top: 50%;
     gap: 8px;
     padding: 6px 12px;
   }
@@ -337,60 +398,71 @@
     width: 8px;
     height: 8px;
   }
-
-  .heroContent {
-    padding: 0 16px 60px;
-    gap: 20px;
-  }
-
-  .heroStats {
-    gap: 20px;
-  }
-
-  .heroStatValue {
-    font-size: 1.3rem;
-  }
 }
 
+/* ============================================================
+   RESPONSIVE — SMALL PHONE (max 480px)
+   ============================================================ */
 @media (max-width: 480px) {
   .carouselTrack {
-    height: calc(100vh - var(--nav-height));
-    min-height: 320px;
+    min-height: 480px;
   }
 
   .skeleton {
-    height: calc(100vh - var(--nav-height));
-    min-height: 320px;
+    min-height: 480px;
+  }
+
+  .slideContent {
+    top: 18%;
+    padding: 0 16px;
+    gap: 8px;
   }
 
   .slideTitle {
-    font-size: 1.6rem;
+    font-size: 1.2rem;
   }
 
   .slideSubtitle {
-    font-size: 0.85rem;
-  }
-
-  .slideLink {
-    padding: 10px 24px;
-    font-size: 0.8rem;
+    font-size: 0.78rem;
   }
 
   .heroContent {
-    padding: 0 16px 48px;
-    gap: 16px;
+    padding: 0 16px 40px;
+    gap: 12px;
+  }
+
+  .heroActions :global(.btn-xl) {
+    padding: 12px 20px;
+    font-size: 0.85rem;
   }
 
   .heroStats {
-    gap: 16px;
-    padding-top: 16px;
+    gap: 8px;
+    padding-top: 12px;
   }
 
   .heroStatValue {
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
 
   .heroStatLabel {
-    font-size: 0.65rem;
+    font-size: 0.58rem;
+    letter-spacing: 0.3px;
+  }
+
+  .arrowBtn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .dots {
+    top: 42%;
+    padding: 5px 10px;
+    gap: 6px;
+  }
+
+  .dot {
+    width: 7px;
+    height: 7px;
   }
 }
