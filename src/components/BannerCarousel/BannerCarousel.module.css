@@ -1,5 +1,7 @@
 /* ============================================================
-   BANNER CAROUSEL — 1793 × 576 aspect ratio (3.11:1)
+   BANNER CAROUSEL — Adaptive aspect ratio
+   Desktop: 1793×576 (3.11:1) · Tablet: 2:1 · Mobile: 4:3 · Phone: 3:4
+   Image always uses cover — no black bars, no cropping issues
    ============================================================ */
 .carousel {
   position: relative;
@@ -12,7 +14,7 @@
   display: flex;
   transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1);
   will-change: transform;
-  /* Maintain 1793:576 aspect ratio = 32.12% */
+  /* Desktop: exact 1793×576 */
   aspect-ratio: 1793 / 576;
 }
 
@@ -24,7 +26,7 @@
   overflow: hidden;
 }
 
-/* Image always covers full area regardless of source dimensions */
+/* Image always covers the full area — no black bars ever */
 .slideImage {
   object-fit: cover;
   object-position: center;
@@ -41,7 +43,7 @@
   pointer-events: none;
 }
 
-/* Slide-specific text content — positioned in upper-left area */
+/* Slide text content */
 .slideContent {
   position: absolute;
   top: 50%;
@@ -281,8 +283,17 @@
 
 /* ============================================================
    RESPONSIVE — TABLET (max 1024px)
+   Aspect ratio: 2:1 (less wide, taller)
    ============================================================ */
 @media (max-width: 1024px) {
+  .carouselTrack {
+    aspect-ratio: 2 / 1;
+  }
+
+  .skeleton {
+    aspect-ratio: 2 / 1;
+  }
+
   .slideContent {
     padding: 0 40px;
     max-width: 520px;
@@ -310,79 +321,56 @@
 
 /* ============================================================
    RESPONSIVE — MOBILE (max 768px)
-   The banner image is wide (1793×576), so on narrow screens
-   we use object-fit: contain to show the FULL image uncropped.
-   The image sits at top, overlay buttons sit below in dark area.
+   Aspect ratio: 4:3 (portrait-ish, image fills fully)
    ============================================================ */
 @media (max-width: 768px) {
   .carouselTrack {
-    aspect-ratio: auto;
-    height: auto;
-    min-height: 440px;
+    aspect-ratio: 4 / 3;
   }
 
   .skeleton {
-    aspect-ratio: auto;
-    height: 440px;
+    aspect-ratio: 4 / 3;
   }
 
-  .slide {
-    display: flex;
-    flex-direction: column;
-  }
-
-  /* Show full image without cropping */
-  .slideImage {
-    object-fit: contain;
-    object-position: top center;
-    position: relative !important;
-    width: 100% !important;
-    height: auto !important;
-    aspect-ratio: 1793 / 576;
-  }
-
+  /* Overlay: darker at bottom for buttons readability */
   .slideOverlay {
     background:
-      linear-gradient(to bottom, transparent 0%, rgba(5, 13, 10, 0.2) 40%, rgba(5, 13, 10, 0.95) 70%, var(--dark-bg) 100%);
+      linear-gradient(to bottom, rgba(5, 13, 10, 0.3) 0%, rgba(5, 13, 10, 0.15) 30%, rgba(5, 13, 10, 0.5) 60%, rgba(5, 13, 10, 0.95) 85%);
   }
 
-  /* Slide text: over the image */
+  /* Slide text: upper area */
   .slideContent {
-    top: 8px;
+    top: 20px;
     transform: none;
     padding: 0 16px;
     max-width: 100%;
-    gap: 6px;
+    gap: 8px;
   }
 
   .slideTitle {
-    font-size: 1rem;
-    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8);
+    font-size: 1.15rem;
+    text-shadow: 0 1px 10px rgba(0, 0, 0, 0.8);
   }
 
   .slideSubtitle {
-    font-size: 0.72rem;
+    font-size: 0.75rem;
     line-height: 1.4;
-    max-width: 260px;
-    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
+    max-width: 280px;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8);
   }
 
   .slideLink {
-    padding: 7px 16px;
-    font-size: 0.72rem;
+    padding: 8px 18px;
+    font-size: 0.75rem;
   }
 
-  /* Hero overlay: sits at bottom */
-  .heroOverlay {
-    align-items: flex-end;
-  }
-
+  /* Hero overlay: bottom area */
   .heroContent {
-    padding: 0 16px 20px;
+    padding: 0 16px 18px;
     gap: 12px;
   }
 
-  /* Stack buttons vertically, full width */
+  /* Stack buttons vertically */
   .heroActions {
     flex-direction: column;
     gap: 8px;
@@ -414,12 +402,12 @@
     letter-spacing: 0.3px;
   }
 
-  /* Arrows: position on the image area */
+  /* Arrows */
   .arrowBtn {
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
     opacity: 0.8;
-    top: 55px;
+    top: 30%;
   }
 
   .carousel:hover .arrowBtn {
@@ -429,17 +417,12 @@
   .arrowPrev { left: 6px; }
   .arrowNext { right: 6px; }
 
-  /* Dots: below the image, above the buttons */
+  /* Dots */
   .dots {
-    position: relative;
     bottom: auto;
-    top: auto;
-    left: auto;
-    transform: none;
-    margin: -30px auto 0;
-    z-index: 3;
+    top: 52%;
     gap: 6px;
-    padding: 4px 12px;
+    padding: 4px 10px;
   }
 
   .dot {
@@ -450,39 +433,40 @@
 
 /* ============================================================
    RESPONSIVE — SMALL PHONE (max 480px)
+   Aspect ratio: 3:4 (fully portrait, image fills beautifully)
    ============================================================ */
 @media (max-width: 480px) {
   .carouselTrack {
-    min-height: 400px;
+    aspect-ratio: 3 / 4;
   }
 
   .skeleton {
-    height: 400px;
+    aspect-ratio: 3 / 4;
   }
 
   .slideContent {
-    top: 4px;
-    padding: 0 12px;
-    gap: 4px;
+    top: 16px;
+    padding: 0 14px;
+    gap: 6px;
   }
 
   .slideTitle {
-    font-size: 0.88rem;
+    font-size: 1rem;
   }
 
   .slideSubtitle {
-    font-size: 0.68rem;
-    max-width: 220px;
+    font-size: 0.7rem;
+    max-width: 240px;
   }
 
   .slideLink {
-    padding: 6px 14px;
-    font-size: 0.68rem;
+    padding: 7px 16px;
+    font-size: 0.7rem;
   }
 
   .heroContent {
-    padding: 0 12px 14px;
-    gap: 8px;
+    padding: 0 14px 16px;
+    gap: 10px;
   }
 
   .heroActions :global(.btn-xl) {
@@ -492,11 +476,11 @@
 
   .heroStats {
     gap: 6px;
-    padding-top: 8px;
+    padding-top: 10px;
   }
 
   .heroStatValue {
-    font-size: 0.92rem;
+    font-size: 0.95rem;
   }
 
   .heroStatLabel {
@@ -504,8 +488,17 @@
   }
 
   .arrowBtn {
-    width: 26px;
-    height: 26px;
-    top: 45px;
+    width: 28px;
+    height: 28px;
+    top: 20%;
+  }
+
+  .dots {
+    top: 40%;
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
   }
 }
