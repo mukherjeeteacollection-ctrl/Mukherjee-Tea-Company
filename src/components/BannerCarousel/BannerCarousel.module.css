@@ -57,6 +57,12 @@
   max-width: 640px;
 }
 
+/* Blurred background (hidden on desktop, shown on mobile) */
+.slideBlurBg {
+  display: none;
+}
+
+
 .slideTitle {
   font-family: 'Outfit', sans-serif;
   font-size: clamp(1.4rem, 3vw, 2.8rem);
@@ -340,11 +346,35 @@
     aspect-ratio: 2 / 1;
   }
 
+  /* Show blurred background to cover black bars */
+  .slideBlurBg {
+    display: block;
+    position: absolute;
+    inset: -10%; /* Extend to hide blur edges */
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .blurImage {
+    object-fit: cover;
+    filter: blur(24px) brightness(0.6);
+    transform: scale(1.1);
+  }
+
+  /* Overlay on top of blur to merge smoothly with dark theme */
+  .blurOverlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 26, 18, 0.4);
+    z-index: 1;
+  }
+
   /* Contain: show full image, no cropping on mobile */
   .slideImage {
     object-fit: contain;
     object-position: center;
-    background: var(--dark-bg);
+    background: transparent; /* Changed from dark-bg to show blur */
+    z-index: 1;
   }
 
   /* Overlay: subtle only — avoid covering contained image */

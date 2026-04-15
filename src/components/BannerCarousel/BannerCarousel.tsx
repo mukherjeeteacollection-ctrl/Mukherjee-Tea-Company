@@ -126,6 +126,18 @@ export default function BannerCarousel() {
             aria-roledescription="slide"
             aria-label={`Slide ${i + 1} of ${banners.length}${banner.title ? `: ${banner.title}` : ''}`}
           >
+            {/* Blurred background for container autofit (mobile) */}
+            <div className={styles.slideBlurBg} aria-hidden="true">
+              <Image
+                src={banner.image_url}
+                alt=""
+                fill
+                sizes="100vw"
+                className={styles.blurImage}
+              />
+              <div className={styles.blurOverlay} />
+            </div>
+
             <Image
               src={banner.image_url}
               alt={banner.title || `Banner ${i + 1}`}
