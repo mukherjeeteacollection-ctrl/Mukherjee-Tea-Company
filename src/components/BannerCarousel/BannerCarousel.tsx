@@ -146,45 +146,12 @@ export default function BannerCarousel() {
               sizes="100vw"
               className={styles.slideImage}
             />
-            <div className={styles.slideOverlay} />
 
-            {/* Optional text overlay */}
-            {(banner.title || banner.subtitle || banner.link_url) && (
-              <div className={styles.slideContent}>
-                {banner.title && <h2 className={styles.slideTitle}>{banner.title}</h2>}
-                {banner.subtitle && <p className={styles.slideSubtitle}>{banner.subtitle}</p>}
-                {banner.link_url && (
-                  <Link href={banner.link_url} className={styles.slideLink}>
-                    {banner.link_text || 'Learn More'}
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                      <path d="M5 12h14M12 5l7 7-7 7" />
-                    </svg>
-                  </Link>
-                )}
-              </div>
-            )}
           </div>
         ))}
       </div>
 
-      {/* ── Persistent Hero Overlay (always visible on top of slides) ── */}
-      <div className={styles.heroOverlay}>
-        <div className={styles.heroContent}>
-          <div className={styles.heroStats}>
-            {[
-              { value: '8+', label: 'Unique Varieties' },
-              { value: '100%', label: 'Organic Certified' },
-              { value: '3rd', label: 'Generation Expertise' },
-              { value: '₹999+', label: 'Free Shipping' },
-            ].map(stat => (
-              <div key={stat.label} className={styles.heroStat}>
-                <span className={styles.heroStatValue}>{stat.value}</span>
-                <span className={styles.heroStatLabel}>{stat.label}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+
 
       {/* ── Arrows ── */}
       {showControls && (
