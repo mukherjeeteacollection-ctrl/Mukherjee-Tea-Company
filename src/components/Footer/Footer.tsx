@@ -13,7 +13,7 @@ export default function Footer() {
           {/* Brand */}
           <div className={styles.brand}>
             <div className={styles.logo}>
-              <Logo height={54} />
+              <Logo height={80} />
               <div className={styles.logoText}>
                 <p className={styles.logoMain}>MUKHERJEE</p>
                 <p className={styles.logoSub}>Tea Company</p>

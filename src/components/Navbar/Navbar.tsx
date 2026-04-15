@@ -63,7 +63,7 @@ export default function Navbar() {
         <div className={styles.inner}>
           {/* Logo */}
           <Link href="/" className={styles.logo}>
-            <Logo height={42} />
+            <Logo height={64} />
             <div className={styles.logoText}>
               <span className={styles.logoMain}>MUKHERJEE</span>
               <span className={styles.logoSub}>Tea Company</span>
@@ -182,7 +182,7 @@ export default function Navbar() {
       <nav className={`${styles.mobileNav} ${mobileOpen ? styles.mobileNavOpen : ''}`}>
         <div className={styles.mobileNavInner}>
           <div className={styles.mobileLogoRow}>
-            <Logo height={32} />
+            <Logo height={48} />
             <div className={styles.logoText}>
               <span className={styles.logoMain} style={{ fontSize: '0.95rem' }}>MUKHERJEE</span>
               <span className={styles.logoSub} style={{ fontSize: '0.5rem', letterSpacing: '2px' }}>Tea Company</span>

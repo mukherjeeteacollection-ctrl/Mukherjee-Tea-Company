@@ -97,7 +97,7 @@ export default function LoginPage() {
       <div className={styles.card}>
         {/* Header */}
         <Link href="/" className={styles.logoLink}>
-          <Logo height={56} />
+          <Logo height={80} />
           <div className={styles.logoText}>
             <span className={styles.logoMain}>MUKHERJEE</span>
             <span className={styles.logoSub}>Tea Company · Since 1971</span>
