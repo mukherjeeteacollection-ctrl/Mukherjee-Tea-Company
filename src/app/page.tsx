@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { PRODUCTS, CATEGORIES } from '@/lib/data';
 import ProductCard from '@/components/ProductCard/ProductCard';
+import BannerCarousel from '@/components/BannerCarousel/BannerCarousel';
 import styles from './page.module.css';
 
 export default function HomePage() {
@@ -94,6 +95,11 @@ export default function HomePage() {
           <div className={styles.scrollDot} />
         </div>
       </section>
+
+      {/* ============================================================
+          BANNER CAROUSEL
+          ============================================================ */}
+      <BannerCarousel />
 
       {/* ============================================================
           CATEGORY STRIP

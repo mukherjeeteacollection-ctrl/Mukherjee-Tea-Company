@@ -83,6 +83,21 @@ export type Database = {
         };
         Update: Partial<Database['public']['Tables']['profiles']['Insert']>;
       };
+      banners: {
+        Row: {
+          id: string;
+          title: string | null;
+          subtitle: string | null;
+          image_url: string;
+          link_url: string | null;
+          link_text: string | null;
+          sort_order: number;
+          is_active: boolean;
+          created_at: string;
+        };
+        Insert: Omit<Database['public']['Tables']['banners']['Row'], 'id' | 'created_at'>;
+        Update: Partial<Database['public']['Tables']['banners']['Insert']>;
+      };
     };
   };
 };
@@ -90,6 +105,7 @@ export type Database = {
 export type Product = Database['public']['Tables']['products']['Row'];
 export type Order = Database['public']['Tables']['orders']['Row'];
 export type Profile = Database['public']['Tables']['profiles']['Row'];
+export type Banner = Database['public']['Tables']['banners']['Row'];
 
 export type OrderLineItem = {
   product_id: string;

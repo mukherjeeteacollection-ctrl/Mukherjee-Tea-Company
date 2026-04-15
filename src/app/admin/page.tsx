@@ -3,14 +3,14 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import Image from 'next/image';
 import { PRODUCTS, ADMIN_EMAIL, CATEGORIES } from '@/lib/data';
-import { Product } from '@/lib/supabase';
+import { Product, Banner } from '@/lib/supabase';
 import { createClient } from '@/utils/supabase/client';
 import Logo from '@/components/Logo/Logo';
 import styles from './page.module.css';
 import { useToast } from '@/context/ToastContext';
 import { useAuth } from '@/context/AuthContext';
 
-type Tab = 'products' | 'orders';
+type Tab = 'products' | 'orders' | 'banners';
 
 const MOCK_ORDERS: any[] = [];
 
@@ -40,8 +40,18 @@ export default function AdminPage() {
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
 
+  // ── Banner state ──
+  const [banners, setBanners] = useState<Banner[]>([]);
+  const [showBannerForm, setShowBannerForm] = useState(false);
+  const [bannerUploading, setBannerUploading] = useState(false);
+  const [bannerImageFile, setBannerImageFile] = useState<File | null>(null);
+  const [newBanner, setNewBanner] = useState({
+    title: '', subtitle: '', link_url: '', link_text: '', sort_order: '0',
+  });
+
   React.useEffect(() => {
     fetchProducts();
+    fetchBanners();
   }, []);
 
   const fetchProducts = async () => {
@@ -49,17 +59,22 @@ export default function AdminPage() {
     if (data) setProducts(data);
   };
 
+  const fetchBanners = async () => {
+    const { data, error } = await supabase.from('banners').select('*').order('sort_order', { ascending: true });
+    if (data) setBanners(data);
+  };
+
   const handleLogout = async () => {
     await signOut();
   };
 
-  const uploadImage = async (file: File) => {
+  const uploadImage = async (file: File, bucket: string = 'tea-images', folder: string = 'products') => {
     const fileExt = file.name.split('.').pop();
     const fileName = `${Math.random()}.${fileExt}`;
-    const filePath = `products/${fileName}`;
+    const filePath = `${folder}/${fileName}`;
 
     const { error: uploadError } = await supabase.storage
-      .from('tea-images')
+      .from(bucket)
       .upload(filePath, file);
 
     if (uploadError) {
@@ -67,10 +82,69 @@ export default function AdminPage() {
     }
 
     const { data } = supabase.storage
-      .from('tea-images')
+      .from(bucket)
       .getPublicUrl(filePath);
 
     return data.publicUrl;
+  };
+
+  // ── Banner handlers ──
+  const handleAddBanner = async () => {
+    if (!bannerImageFile) {
+      showToast('Please select a banner image', 'error');
+      return;
+    }
+    setBannerUploading(true);
+    try {
+      const imageUrl = await uploadImage(bannerImageFile, 'banners', 'banners');
+
+      const b = {
+        title: newBanner.title || null,
+        subtitle: newBanner.subtitle || null,
+        image_url: imageUrl,
+        link_url: newBanner.link_url || null,
+        link_text: newBanner.link_text || null,
+        sort_order: Number(newBanner.sort_order) || 0,
+        is_active: true,
+      };
+
+      const { error } = await (supabase.from('banners') as any).insert([b]);
+      if (error) throw error;
+
+      showToast('Banner added successfully', 'success');
+      setShowBannerForm(false);
+      setBannerImageFile(null);
+      setNewBanner({ title: '', subtitle: '', link_url: '', link_text: '', sort_order: '0' });
+      fetchBanners();
+    } catch (err: any) {
+      showToast(err.message || 'Error adding banner', 'error');
+    } finally {
+      setBannerUploading(false);
+    }
+  };
+
+  const handleDeleteBanner = async (id: string) => {
+    if (confirm('Delete this banner?')) {
+      const { error } = await supabase.from('banners').delete().eq('id', id);
+      if (error) {
+        showToast(error.message || 'Error deleting banner', 'error');
+      } else {
+        showToast('Banner deleted', 'success');
+        fetchBanners();
+      }
+    }
+  };
+
+  const handleToggleBannerActive = async (id: string, currentActive: boolean) => {
+    const { error } = await (supabase.from('banners') as any)
+      .update({ is_active: !currentActive })
+      .eq('id', id);
+    if (error) {
+      showToast(error.message || 'Error updating banner', 'error');
+    } else {
+      showToast(`Banner ${!currentActive ? 'activated' : 'deactivated'}`, 'success');
+      fetchBanners();
+    }
   };
 
   const handleDeleteProduct = async (id: string) => {
@@ -197,14 +271,17 @@ export default function AdminPage() {
           <button onClick={() => setTab('products')} className={`${styles.navItem} ${tab === 'products' ? styles.navItemActive : ''}`} id="admin-tab-products">
             📦 Products
           </button>
+          <button onClick={() => setTab('banners')} className={`${styles.navItem} ${tab === 'banners' ? styles.navItemActive : ''}`} id="admin-tab-banners">
+            🖼️ Banners
+          </button>
           <button onClick={() => setTab('orders')} className={`${styles.navItem} ${tab === 'orders' ? styles.navItemActive : ''}`} id="admin-tab-orders">
             📋 Orders
           </button>
         </nav>
         <div className={styles.sidebarStats}>
           <div className={styles.stat}><span className={styles.statVal}>{products.length}</span><span className={styles.statLabel}>Products</span></div>
+          <div className={styles.stat}><span className={styles.statVal}>{banners.length}</span><span className={styles.statLabel}>Banners</span></div>
           <div className={styles.stat}><span className={styles.statVal}>{orders.length}</span><span className={styles.statLabel}>Orders</span></div>
-          <div className={styles.stat}><span className={styles.statVal}>₹{orders.reduce((s, o) => s + o.total, 0).toLocaleString('en-IN')}</span><span className={styles.statLabel}>Revenue</span></div>
         </div>
         <button onClick={handleLogout} className="btn btn-ghost" style={{ margin: '0 12px', fontSize: '0.82rem' }}>
           🚪 Logout
@@ -376,6 +453,99 @@ export default function AdminPage() {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        )}
+
+        {/* ══════════════════════════════════════════════
+            BANNERS TAB
+            ══════════════════════════════════════════════ */}
+        {tab === 'banners' && (
+          <div className={styles.panel}>
+            <div className={styles.panelHeader}>
+              <h2 className={styles.panelTitle}>Banners</h2>
+              <button className="btn btn-secondary" onClick={() => setShowBannerForm(true)} id="add-banner-btn">
+                + Add Banner
+              </button>
+            </div>
+
+            {showBannerForm && (
+              <div className={styles.addForm}>
+                <h3 style={{ fontFamily: 'Outfit', fontWeight: 700, color: 'var(--text-primary)', marginBottom: 16, fontSize: '1.1rem', borderBottom: '1px solid var(--border-subtle, #333)', paddingBottom: 10 }}>🖼️ New Banner</h3>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+                  <div className="form-group">
+                    <label className="form-label">Title (optional)</label>
+                    <input value={newBanner.title} onChange={e => setNewBanner(p => ({ ...p, title: e.target.value }))} placeholder="e.g. Summer Sale — 20% Off" className="form-input" />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Sort Order</label>
+                    <input type="number" value={newBanner.sort_order} onChange={e => setNewBanner(p => ({ ...p, sort_order: e.target.value }))} placeholder="0" className="form-input" />
+                  </div>
+                  <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                    <label className="form-label">Subtitle (optional)</label>
+                    <input value={newBanner.subtitle} onChange={e => setNewBanner(p => ({ ...p, subtitle: e.target.value }))} placeholder="A short description shown on the banner" className="form-input" />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Link URL (optional)</label>
+                    <input value={newBanner.link_url} onChange={e => setNewBanner(p => ({ ...p, link_url: e.target.value }))} placeholder="/shop or https://…" className="form-input" />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Link Button Text</label>
+                    <input value={newBanner.link_text} onChange={e => setNewBanner(p => ({ ...p, link_text: e.target.value }))} placeholder="e.g. Shop Now" className="form-input" />
+                  </div>
+                  <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                    <label className="form-label">Banner Image *</label>
+                    <input type="file" accept="image/*" onChange={e => setBannerImageFile(e.target.files?.[0] || null)} className="form-input" style={{ paddingTop: 8 }} />
+                    <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: 4 }}>Image will stretch to fill the full width of the screen. Any size works.</p>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: 12, marginTop: 20 }}>
+                  <button onClick={handleAddBanner} disabled={bannerUploading} className="btn btn-primary">
+                    {bannerUploading ? 'Uploading...' : '✨ Save Banner'}
+                  </button>
+                  <button onClick={() => { setShowBannerForm(false); setBannerImageFile(null); }} className="btn btn-secondary">Cancel</button>
+                </div>
+              </div>
+            )}
+
+            <div className={styles.productsTable}>
+              <div className={styles.tableHeader} style={{ gridTemplateColumns: '0.6fr 2fr 1fr 0.6fr 0.6fr 1fr' }}>
+                <span>Image</span>
+                <span>Title / Subtitle</span>
+                <span>Link</span>
+                <span>Order</span>
+                <span>Status</span>
+                <span>Actions</span>
+              </div>
+              {banners.map(b => (
+                <div key={b.id} className={styles.tableRow} style={{ gridTemplateColumns: '0.6fr 2fr 1fr 0.6fr 0.6fr 1fr' }}>
+                  <div style={{ width: 80, height: 45, borderRadius: 8, overflow: 'hidden', position: 'relative', flexShrink: 0, background: 'var(--dark-surface)' }}>
+                    <Image src={b.image_url} alt={b.title || 'Banner'} fill style={{ objectFit: 'cover' }} />
+                  </div>
+                  <div>
+                    <p style={{ fontFamily: 'Outfit', fontWeight: 600, fontSize: '0.875rem', color: 'var(--text-primary)' }}>{b.title || '(No title)'}</p>
+                    {b.subtitle && <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{b.subtitle}</p>}
+                  </div>
+                  <span style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', wordBreak: 'break-all' }}>{b.link_url || '—'}</span>
+                  <span style={{ fontFamily: 'Outfit', fontWeight: 700, color: 'var(--gold-light)' }}>{b.sort_order}</span>
+                  <span
+                    className={`badge ${b.is_active ? 'badge-success' : 'badge-warning'}`}
+                    style={{ fontSize: '0.68rem', cursor: 'pointer' }}
+                    onClick={() => handleToggleBannerActive(b.id, b.is_active)}
+                    title="Click to toggle"
+                  >
+                    {b.is_active ? 'Active' : 'Inactive'}
+                  </span>
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    <button className="btn btn-sm btn-danger" onClick={() => handleDeleteBanner(b.id)} id={`admin-delete-banner-${b.id}`}>Delete</button>
+                  </div>
+                </div>
+              ))}
+              {banners.length === 0 && (
+                <div style={{ padding: '40px 20px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+                  No banners yet. Click "+ Add Banner" to create your first one.
+                </div>
+              )}
             </div>
           </div>
         )}
