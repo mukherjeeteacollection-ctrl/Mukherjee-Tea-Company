@@ -26,7 +26,7 @@
   overflow: hidden;
 }
 
-/* Image always covers the full area — no black bars ever */
+/* Desktop: image covers the full area */
 .slideImage {
   object-fit: cover;
   object-position: center;
@@ -340,7 +340,14 @@
     aspect-ratio: 2 / 1;
   }
 
-  /* Overlay: darker at bottom for text readability */
+  /* Contain: show full image, no cropping on mobile */
+  .slideImage {
+    object-fit: contain;
+    object-position: center;
+    background: var(--dark-bg);
+  }
+
+  /* Overlay: subtle only — avoid covering contained image */
   .slideOverlay {
     background:
       linear-gradient(to bottom, rgba(5, 13, 10, 0.2) 0%, rgba(5, 13, 10, 0.1) 30%, rgba(5, 13, 10, 0.4) 60%, rgba(5, 13, 10, 0.85) 90%);
@@ -421,6 +428,12 @@
 
   .skeleton {
     aspect-ratio: 1.5 / 1;
+  }
+
+  /* Contain: show full image, no cropping on small phones */
+  .slideImage {
+    object-fit: contain;
+    object-position: center;
   }
 
   .slideTitle {
