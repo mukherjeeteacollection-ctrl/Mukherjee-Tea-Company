@@ -32,72 +32,7 @@ export default function HomePage() {
   return (
     <>
       {/* ============================================================
-          HERO
-          ============================================================ */}
-      <section className={styles.hero} id="hero">
-        <div className={styles.heroBg}>
-          <Image
-            src="/hero-tea-estate.png"
-            alt="Mukherjee Tea Estate — Darjeeling highlands"
-            fill
-            priority
-            style={{ objectFit: 'cover', objectPosition: 'center 30%' }}
-          />
-          <div className={styles.heroBgOverlay} />
-        </div>
-
-        <div className={`container ${styles.heroContent}`}>
-          <div className={styles.heroBadge}>
-            <span>🌿</span>
-            <span>100% Artisanal · Single Estate · India</span>
-          </div>
-
-          <h1 className={styles.heroTitle}>
-            <span className="font-serif" style={{ display: 'block', fontStyle: 'italic', fontSize: '0.55em', fontWeight: 400, color: 'var(--text-secondary)', marginBottom: 8, letterSpacing: '0.1em' }}>
-              The essence of
-            </span>
-            Where Every Sip
-            <span className="text-gradient" style={{ display: 'block' }}>Tells a Story</span>
-          </h1>
-
-          <p className={styles.heroSubtitle}>
-            Handcrafted teas from the mist-wrapped gardens of Darjeeling & Assam.
-            Generations of expertise. One exceptional cup.
-          </p>
-
-          <div className={styles.heroActions}>
-            <Link href="/shop" className="btn btn-primary btn-xl" id="hero-shop-btn">
-              Explore Our Teas
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </Link>
-            <Link href="/about" className="btn btn-secondary btn-xl">
-              Our Story
-            </Link>
-          </div>
-
-          <div className={styles.heroStats}>
-            {[
-              { value: '8+', label: 'Unique Varieties' },
-              { value: '100%', label: 'Organic Certified' },
-              { value: '3rd', label: 'Generation Expertise' },
-              { value: '₹999+', label: 'Free Shipping' },
-            ].map(stat => (
-              <div key={stat.label} className={styles.heroStat}>
-                <span className={styles.heroStatValue}>{stat.value}</span>
-                <span className={styles.heroStatLabel}>{stat.label}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Scroll indicator */}
-        <div className={styles.scrollIndicator}>
-          <div className={styles.scrollDot} />
-        </div>
-      </section>
-
-      {/* ============================================================
-          BANNER CAROUSEL
+          HERO BANNER CAROUSEL
           ============================================================ */}
       <BannerCarousel />
 
