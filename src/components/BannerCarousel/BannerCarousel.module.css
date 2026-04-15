@@ -310,45 +310,73 @@
 
 /* ============================================================
    RESPONSIVE — MOBILE (max 768px)
-   On mobile the aspect ratio makes the banner quite short,
-   so we switch to a taller fixed height to show content well.
+   The banner image is wide (1793×576), so on narrow screens
+   we use object-fit: contain to show the FULL image uncropped.
+   The image sits at top, overlay buttons sit below in dark area.
    ============================================================ */
 @media (max-width: 768px) {
   .carouselTrack {
     aspect-ratio: auto;
-    height: 420px;
+    height: auto;
+    min-height: 440px;
   }
 
   .skeleton {
     aspect-ratio: auto;
-    height: 420px;
+    height: 440px;
   }
 
-  /* Slide text: top area */
+  .slide {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Show full image without cropping */
+  .slideImage {
+    object-fit: contain;
+    object-position: top center;
+    position: relative !important;
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 1793 / 576;
+  }
+
+  .slideOverlay {
+    background:
+      linear-gradient(to bottom, transparent 0%, rgba(5, 13, 10, 0.2) 40%, rgba(5, 13, 10, 0.95) 70%, var(--dark-bg) 100%);
+  }
+
+  /* Slide text: over the image */
   .slideContent {
-    top: 24px;
+    top: 8px;
     transform: none;
     padding: 0 16px;
     max-width: 100%;
-    gap: 8px;
+    gap: 6px;
   }
 
   .slideTitle {
-    font-size: 1.15rem;
+    font-size: 1rem;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8);
   }
 
   .slideSubtitle {
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     line-height: 1.4;
-    max-width: 280px;
+    max-width: 260px;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
   }
 
   .slideLink {
-    padding: 8px 18px;
-    font-size: 0.75rem;
+    padding: 7px 16px;
+    font-size: 0.72rem;
   }
 
-  /* Hero overlay: bottom of banner */
+  /* Hero overlay: sits at bottom */
+  .heroOverlay {
+    align-items: flex-end;
+  }
+
   .heroContent {
     padding: 0 16px 20px;
     gap: 12px;
@@ -378,20 +406,20 @@
   }
 
   .heroStatValue {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
   }
 
   .heroStatLabel {
-    font-size: 0.6rem;
+    font-size: 0.58rem;
     letter-spacing: 0.3px;
   }
 
-  /* Arrows: smaller, always visible */
+  /* Arrows: position on the image area */
   .arrowBtn {
-    width: 32px;
-    height: 32px;
-    opacity: 0.75;
-    top: 60px;
+    width: 30px;
+    height: 30px;
+    opacity: 0.8;
+    top: 55px;
   }
 
   .carousel:hover .arrowBtn {
@@ -401,23 +429,22 @@
   .arrowPrev { left: 6px; }
   .arrowNext { right: 6px; }
 
-  /* Dots: above buttons area */
+  /* Dots: below the image, above the buttons */
   .dots {
+    position: relative;
     bottom: auto;
-    top: 115px;
+    top: auto;
+    left: auto;
+    transform: none;
+    margin: -30px auto 0;
+    z-index: 3;
     gap: 6px;
-    padding: 4px 10px;
+    padding: 4px 12px;
   }
 
   .dot {
     width: 7px;
     height: 7px;
-  }
-
-  .slideOverlay {
-    background:
-      linear-gradient(to bottom, rgba(5, 13, 10, 0.7) 0%, rgba(5, 13, 10, 0.3) 30%, transparent 50%),
-      linear-gradient(to top, rgba(5, 13, 10, 0.95) 0%, rgba(5, 13, 10, 0.6) 40%, transparent 65%);
   }
 }
 
@@ -426,36 +453,36 @@
    ============================================================ */
 @media (max-width: 480px) {
   .carouselTrack {
-    height: 380px;
+    min-height: 400px;
   }
 
   .skeleton {
-    height: 380px;
+    height: 400px;
   }
 
   .slideContent {
-    top: 16px;
-    padding: 0 14px;
-    gap: 6px;
+    top: 4px;
+    padding: 0 12px;
+    gap: 4px;
   }
 
   .slideTitle {
-    font-size: 1rem;
+    font-size: 0.88rem;
   }
 
   .slideSubtitle {
-    font-size: 0.7rem;
-    max-width: 240px;
+    font-size: 0.68rem;
+    max-width: 220px;
   }
 
   .slideLink {
-    padding: 7px 16px;
-    font-size: 0.7rem;
+    padding: 6px 14px;
+    font-size: 0.68rem;
   }
 
   .heroContent {
-    padding: 0 14px 16px;
-    gap: 10px;
+    padding: 0 12px 14px;
+    gap: 8px;
   }
 
   .heroActions :global(.btn-xl) {
@@ -465,29 +492,20 @@
 
   .heroStats {
     gap: 6px;
-    padding-top: 10px;
+    padding-top: 8px;
   }
 
   .heroStatValue {
-    font-size: 0.95rem;
+    font-size: 0.92rem;
   }
 
   .heroStatLabel {
-    font-size: 0.55rem;
+    font-size: 0.52rem;
   }
 
   .arrowBtn {
-    width: 28px;
-    height: 28px;
-    top: 50px;
-  }
-
-  .dots {
-    top: 100px;
-  }
-
-  .dot {
-    width: 6px;
-    height: 6px;
+    width: 26px;
+    height: 26px;
+    top: 45px;
   }
 }
